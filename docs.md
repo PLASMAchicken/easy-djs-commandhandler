@@ -63,7 +63,7 @@ Options for the Coammnd Handler.
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| [prefix] | <code>string</code> | <code>&quot;!&quot;</code> | Prefix. |
-| [owner] | <code>Array</code> | <code>[]</code> | Array of ids with Bot Perms. |
-| [folder] | <code>string</code> | <code>&quot;commands&quot;</code> | Folder where the Commands are in. |
+| prefix | <code>string</code> | <code>&quot;!&quot;</code> | Prefix. |
+| owner | <code>Array</code> | <code>[</code> | Array of ids with Bot Perms. |
+| folder | <code>string</code> | <code>&quot;commands&quot;</code> | Folder where the Commands are in. |
 

@@ -6,9 +6,9 @@ class CommandHander {
  	* Options for the Coammnd Handler.
  	* @typedef {Object} HandlerSettings
 	*
-	* @property {string} [prefix=!] Prefix.
- 	* @property {Array} [owner=[]] Array of ids with Bot Perms.
- 	* @property {string} [folder=commands] Folder where the Commands are in.
+	* @property {string} prefix=! Prefix.
+ 	* @property {Array} owner=[] Array of ids with Bot Perms.
+ 	* @property {string} folder=commands Folder where the Commands are in.
  	*/
 
 	/**

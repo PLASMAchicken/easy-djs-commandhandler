@@ -32,6 +32,8 @@ module.exports.run = async (client, message, args) => {
 module.exports.help = {
 	name: 'cmdname',
 	description: '',
+    hideinhelp: false,
+    requires: ['botowner', 'guild', 'dm'],
 	usage: '<prefix>cmdname',   // <prefix> gets replaced with the prefix
 	aliases: ['cmdalias'],
 };  // to get a category just make a sub-folder
