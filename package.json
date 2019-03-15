@@ -7,6 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "plasmachicken",
+  "repository": {
+      "type": "github",
+      "url": "https://github.com/PLASMAchicken/easy-djs-commandhandler"
+  },
+  "bugs": {"url": "https://github.com/PLASMAchicken/easy-djs-commandhandler/issues"},
   "license": "ISC",
   "devDependencies": {
     "eslint": "^5.15.1",
