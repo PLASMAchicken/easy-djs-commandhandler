@@ -2,12 +2,20 @@ const fs = require('fs');
 const { Message, Client, Collection } = require('discord.js');
 
 class CommandHander {
+	/**
+ 	* Options for the Coammnd Handler.
+ 	* @typedef {Object} HandlerSettings
+	*
+	* @property {string} [prefix=!] Prefix.
+ 	* @property {Array} [owner=[]] Array of ids with Bot Perms.
+ 	* @property {string} [folder=commands] Folder where the Commands are in.
+ 	*/
 
 	/**
 	* Module to run and handle Commands.
 	*
 	* @param {Client} client - Discord.js Client.
-	* @param {Object} settings - Settings.folder to get Commands from.
+	* @param {HandlerSettings} settings - Settings.folder to get Commands from.
 	* @example new commandhandler(client, { prefix: '?', owner: ['193406800614129664'], folder: 'cmds' });
 	*/
 	constructor(client, settings) {
