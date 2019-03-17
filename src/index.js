@@ -53,7 +53,7 @@ class CommandHander {
 			if(err) { // err =>
 				if (err.errno == -4058) { // err code = -4058 => dir not present
 					fs.mkdirSync(`./${settings.folder}/`); // => make dir
-					console.log(`Command settings.folder was not found! Creating ./${settings.folder}/ \n Please restart Bot!`); // => log
+					console.log(`Command Folder was not found! Creating ./${settings.folder}/ \n Please restart Bot!`); // => log
 					return process.exit(); // => return
 				}
 				else{ // Unknow Error =>
