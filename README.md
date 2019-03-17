@@ -36,6 +36,7 @@ module.exports.help = {
     requires: ['botowner', 'guild', 'dm'],
 	usage: '<prefix>cmdname',   // <prefix> gets replaced with the prefix
 	aliases: ['cmdalias'],
+	// cooldownGroup: 'example' || use this to cooldown all the commands in that group
 };  // to get a category just make a sub-folder
 ```
 

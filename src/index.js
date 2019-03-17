@@ -139,8 +139,9 @@ class CommandHander {
 				const cooldowns = client.cooldowns.get(message.author.id) || {};
 				const now = Date.now();
 				const cooldownAmount = ms(cmd.help.cooldown || '5s');
-				if (!cooldowns[cmd.help.name]) cooldowns[cmd.help.name] = now - cooldownAmount;
-				const cooldown = cooldowns[cmd.help.name];
+				const cooldownName = cmd.help.cooldownGroup || cmd.help.name;
+				if (!cooldowns[cooldownName]) cooldowns[cooldownName] = now - cooldownAmount;
+				const cooldown = cooldowns[cooldownName];
 				const expirationTime = cooldown + cooldownAmount;
 				if (now < expirationTime) {
 					const timeLeft = ms(expirationTime - now, {
@@ -148,7 +149,7 @@ class CommandHander {
 					});
 					return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
 				}
-				cooldowns[cmd.help.name] = now;
+				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);
 			}
 			cmd.run(client, message, args);
