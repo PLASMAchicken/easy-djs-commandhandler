@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>Classes</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body>
+        <h2 id="classes">Classes</h2>
+<dl>
+<dt><a href="#CommandHander">CommandHander</a></dt>
+<dd></dd>
+</dl>
+<h2 id="typedefs">Typedefs</h2>
+<dl>
+<dt><a href="#HandlerSettings">HandlerSettings</a> : <code>Object</code></dt>
+<dd><p>Options for the Coammnd Handler.</p>
+</dd>
+</dl>
+<p><a name="CommandHander"></a></p>
+<h2 id="commandhander">CommandHander</h2>
+<p><strong>Kind</strong>: global class</p>
+<ul>
+<li><a href="#CommandHander">CommandHander</a>
+<ul>
+<li><a href="#new_CommandHander_new">new CommandHander(client, settings)</a></li>
+<li><a href="#CommandHander+handle">.handle(client, message)</a></li>
+</ul>
+</li>
+</ul>
+<p><a name="new_CommandHander_new"></a></p>
+<h3 id="new-commandhanderclient-settings">new CommandHander(client, settings)</h3>
+<p>Module to run and handle Commands.</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>client</td>
+<td><code>Client</code></td>
+<td>Discord.js Client.</td>
+</tr>
+<tr>
+<td>settings</td>
+<td><a href="#HandlerSettings"><code>HandlerSettings</code></a></td>
+<td>Settings.folder to get Commands from.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-js"><div><span class="hljs-keyword">new</span> commandhandler(client, { <span class="hljs-attr">prefix</span>: <span class="hljs-string">'?'</span>, <span class="hljs-attr">owner</span>: [<span class="hljs-string">'193406800614129664'</span>], <span class="hljs-attr">folder</span>: <span class="hljs-string">'cmds'</span> });
+</div></code></pre>
+<p><a name="CommandHander+handle"></a></p>
+<h3 id="commandhanderhandleclient-message">commandHander.handle(client, message)</h3>
+<p>Module to run and handle Commands.</p>
+<p><strong>Kind</strong>: instance method of <a href="#CommandHander"><code>CommandHander</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>client</td>
+<td><code>Client</code></td>
+<td>Discord Client.</td>
+</tr>
+<tr>
+<td>message</td>
+<td><code>Message</code></td>
+<td>Message Object to handle Command in.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-js"><div>commandhandler.run(client, message);
+</div></code></pre>
+<p><a name="HandlerSettings"></a></p>
+<h2 id="handlersettings--codeobjectcode">HandlerSettings : <code>Object</code></h2>
+<p>Options for the Coammnd Handler.</p>
+<p><strong>Kind</strong>: global typedef<br>
+<strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prefix</td>
+<td><code>string</code></td>
+<td><code>&quot;!&quot;</code></td>
+<td>Prefix.</td>
+</tr>
+<tr>
+<td>owner</td>
+<td><code>Array</code></td>
+<td><code>[</code></td>
+<td>Array of ids with Bot Perms.</td>
+</tr>
+<tr>
+<td>folder</td>
+<td><code>string</code></td>
+<td><code>&quot;commands&quot;</code></td>
+<td>Folder where the Commands are in.</td>
+</tr>
+<tr>
+<td>cooldowns</td>
+<td><code>*</code></td>
+<td><code>true</code></td>
+<td>If Cooldowns are Enabled, either true/false, or Collection</td>
+</tr>
+</tbody>
+</table>
+
+    </body>
+    </html>
