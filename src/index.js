@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Message, Client, Collection } = require('discord.js');
-
+const ms = require('ms');
 class CommandHander {
 	/**
  	* Options for the Coammnd Handler.
@@ -8,7 +8,8 @@ class CommandHander {
 	*
 	* @property {string} prefix=! Prefix.
  	* @property {Array} owner=[] Array of ids with Bot Perms.
- 	* @property {string} folder=commands Folder where the Commands are in.
+	* @property {string} folder=commands Folder where the Commands are in.
+	* @property {*} cooldowns=true - If Cooldowns are Enabled, either true/false, or Collection
  	*/
 
 	/**
@@ -24,6 +25,13 @@ class CommandHander {
 		if(!settings) settings = {};
 		if(!settings.folder) settings.folder = 'commands';
 		if(!settings.prefix) settings.prefix = '!';
+		if(settings.cooldowns === undefined) settings.cooldowns = true;
+		if(settings.cooldowns === true) {
+			settings.cooldowns = new Collection();
+			client.cooldowns = settings.cooldowns;
+		}
+		else {client.cooldowns = settings.cooldowns;}
+
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
 		if(!settings.owner) client.owners = [];
 		else if (typeof settings.owner == 'string') client.owners = [settings.owner];
@@ -127,19 +135,22 @@ class CommandHander {
 				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
 			}
 			if (((cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) && (!message.guild || !['490999695422783489', '511221411805790209'].includes(message.guild.id)))) return message.reply(client.format('This Command is indevelopment! Please join <mainserverinvite> and use it there until it is finished!')), message.channel.stopTyping(true);
-			/* const now = Date.now();
-			const cooldownAmount = ms(cmd.help.cooldown || '5s');
-			if (!stats.cooldowns[cmd.help.name]) stats.cooldowns[cmd.help.name] = now - cooldownAmount;
-			const cooldown = stats.cooldowns[cmd.help.name];
-			const expirationTime = cooldown + cooldownAmount;
-			if (now < expirationTime) {
-				const timeLeft = ms(expirationTime - now, {
-					long: true,
-				});
-				return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
+			if(client.cooldowns) {
+				const cooldowns = client.cooldowns.get(message.author.id) || {};
+				const now = Date.now();
+				const cooldownAmount = ms(cmd.help.cooldown || '5s');
+				if (!cooldowns[cmd.help.name]) cooldowns[cmd.help.name] = now - cooldownAmount;
+				const cooldown = cooldowns[cmd.help.name];
+				const expirationTime = cooldown + cooldownAmount;
+				if (now < expirationTime) {
+					const timeLeft = ms(expirationTime - now, {
+						long: true,
+					});
+					return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
+				}
+				cooldowns[cmd.help.name] = now;
+				client.cooldowns.set(message.author.id, cooldowns);
 			}
-			stats.cooldowns[cmd.help.name] = now;
-			 */
 			cmd.run(client, message, args);
 			if (cmd.help.category === 'indevelopment' && !['193406800614129664', '211795109132369920'].includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 			message.channel.stopTyping(true);

@@ -1,6 +1,6 @@
 {
   "name": "easy-djs-commandhandler",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Package to create an easy discord bot",
   "main": "./src/index",
   "scripts": {
@@ -8,16 +8,19 @@
   },
   "author": "plasmachicken",
   "repository": {
-      "type": "github",
-      "url": "https://github.com/PLASMAchicken/easy-djs-commandhandler"
+    "type": "github",
+    "url": "https://github.com/PLASMAchicken/easy-djs-commandhandler"
   },
-  "bugs": {"url": "https://github.com/PLASMAchicken/easy-djs-commandhandler/issues"},
+  "bugs": {
+    "url": "https://github.com/PLASMAchicken/easy-djs-commandhandler/issues"
+  },
   "license": "ISC",
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-plugin-jsdoc": "^4.4.1"
   },
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "ms": "^2.1.1"
   }
 }

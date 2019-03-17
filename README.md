@@ -1,4 +1,4 @@
-Module to make an fast setup Discord Bot, simply do:
+# Module to make an fast setup Discord Bot, simply do:
 
 ```js
 const Discord = require('discord.js');
@@ -17,7 +17,7 @@ client.on('messageUpdate', (oldmessage, message) => {
 client.login()
 ```
 
-Then you can make your own Commands in the `commands` ( customizeable ) folder, by doing:
+# Then you can make your own Commands in the `commands` ( customizeable ) folder, by doing:
 ```js
 const { Client, Message } = require('discord.js');
 /**
@@ -39,4 +39,18 @@ module.exports.help = {
 };  // to get a category just make a sub-folder
 ```
 
-More Info can be found in docs.md
+
+# Using Custom/Presistant Cooldowns
+
+```js
+
+const Enmap = require("enmap");
+
+// Normal enmap with default options
+const cooldownsEnmap = new Enmap({name: "cooldowns"});
+
+const handle = new commandHandler(client, {owner: ['193406800614129664'], cooldowns: cooldownsEnmap});
+
+```
+
+## More Info can be found in docs.md

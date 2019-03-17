@@ -66,4 +66,5 @@ Options for the Coammnd Handler.
 | prefix | <code>string</code> | <code>&quot;!&quot;</code> | Prefix. |
 | owner | <code>Array</code> | <code>[</code> | Array of ids with Bot Perms. |
 | folder | <code>string</code> | <code>&quot;commands&quot;</code> | Folder where the Commands are in. |
+| cooldowns | <code>\*</code> | <code>true</code> | If Cooldowns are Enabled, either true/false, or Collection |
 
