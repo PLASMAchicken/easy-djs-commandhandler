@@ -6,10 +6,10 @@ class CommandHander {
  	* Options for the Coammnd Handler.
  	* @typedef {Object} HandlerSettings
 	*
-	* @property {string} prefix=! Prefix.
- 	* @property {Array} owner=[] Array of ids with Bot Perms.
-	* @property {string} folder=commands Folder where the Commands are in.
-	* @property {*} cooldowns=true - If Cooldowns are Enabled, either true/false, or Collection
+	* @property {string} [prefix='!'] Prefix.
+ 	* @property {Array} [owner=[]] Array of ids with Bot Perms.
+	* @property {string} [folder='commands'] Folder where the Commands are in.
+	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection
  	*/
 
 	/**
