@@ -55,6 +55,7 @@ client.login()
     <span class="hljs-attr">requires</span>: [<span class="hljs-string">'botowner'</span>, <span class="hljs-string">'guild'</span>, <span class="hljs-string">'dm'</span>],
 	<span class="hljs-attr">usage</span>: <span class="hljs-string">'&lt;prefix&gt;cmdname'</span>,   <span class="hljs-comment">// &lt;prefix&gt; gets replaced with the prefix</span>
 	aliases: [<span class="hljs-string">'cmdalias'</span>],
+	<span class="hljs-comment">// cooldownGroup: 'example' || use this to cooldown all the commands in that group</span>
 };  <span class="hljs-comment">// to get a category just make a sub-folder</span>
 </div></code></pre>
 <h1 id="using-custompresistant-cooldowns">Using Custom/Presistant Cooldowns</h1>
@@ -67,7 +68,7 @@ client.login()
 <span class="hljs-keyword">const</span> handle = <span class="hljs-keyword">new</span> commandHandler(client, {<span class="hljs-attr">owner</span>: [<span class="hljs-string">'193406800614129664'</span>], <span class="hljs-attr">cooldowns</span>: cooldownsEnmap});
 
 </div></code></pre>
-<h2 id="more-info-can-be-found-in-docsmd">More Info can be found in <a href="http://docs.md">docs.md</a></h2>
+<h2 id="more-info-can-be-found-in-docsmd">More Info can be found in <a href="https://github.com/PLASMAchicken/easy-djs-commandhandler/blob/master/docs.md">docs.md</a></h2>
 
     </body>
     </html>
