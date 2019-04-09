@@ -10,13 +10,14 @@ class CommandHander {
  	* @property {Array} [owner=[]] Array of ids with Bot Perms.
 	* @property {string} [folder='commands'] Folder where the Commands are in.
 	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection
+	* @property {boolean} [defaultcmds=true] - Load Default Commands.
  	*/
 
 	/**
 	* Module to run and handle Commands.
 	*
 	* @param {Client} client - Discord.js Client.
-	* @param {HandlerSettings} settings - Settings.folder to get Commands from.
+	* @param {HandlerSettings} settings - Settings Object.
 	* @example new commandhandler(client, { prefix: '?', owner: ['193406800614129664'], folder: 'cmds' });
 	*/
 	constructor(client, settings) {
@@ -32,6 +33,7 @@ class CommandHander {
 		}
 		else {client.cooldowns = settings.cooldowns;}
 
+		if(settings.defaultcmds !== true) settings.defaultcmds = false;
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
 		if(!settings.owner) client.owners = [];
 		else if (typeof settings.owner == 'string') client.owners = [settings.owner];
@@ -102,8 +104,8 @@ class CommandHander {
 
 
 			console.log('Categorys loaded or none found!\n-------------------------------');
-			loadBaseCMD(client, 'help');
-			loadBaseCMD(client, 'eval');
+			loadBaseCMD(client, 'help', this.settings);
+			loadBaseCMD(client, 'eval', this.settings);
 
 			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
 		}); // => close commandhandler and start client
@@ -161,8 +163,8 @@ class CommandHander {
 
 module.exports = CommandHander;
 
-function loadBaseCMD(client, cmd) {
-	if(!client.commands.has(cmd)) {
+function loadBaseCMD(client, cmd, settings) {
+	if(!client.commands.has(cmd) && settings.defaultcmds) {
 		const props = require(`./commands/${cmd}.js`); // => load each one
 
 		console.log(`Loaded Default Command: ${cmd}`); // => log that command got loaded
