@@ -134,7 +134,6 @@ class CommandHander {
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
 			}
-			if (((cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) && (!message.guild || !['490999695422783489', '511221411805790209'].includes(message.guild.id)))) return message.reply(client.format('This Command is indevelopment! Please join <mainserverinvite> and use it there until it is finished!')), message.channel.stopTyping(true);
 			if(client.cooldowns) {
 				const cooldowns = client.cooldowns.get(message.author.id) || {};
 				const now = Date.now();
@@ -153,7 +152,7 @@ class CommandHander {
 				client.cooldowns.set(message.author.id, cooldowns);
 			}
 			cmd.run(client, message, args);
-			if (cmd.help.category === 'indevelopment' && !['193406800614129664', '211795109132369920'].includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
+			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 			message.channel.stopTyping(true);
 		}
 	}
