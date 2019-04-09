@@ -163,6 +163,14 @@ class CommandHander {
 
 module.exports = CommandHander;
 
+/**
+ * Function to load Base Commmands that come with the Package.
+ *
+ * @private
+ * @param {Client} client - Discord.JS Client.
+ * @param {string} cmd - Name of Commmand to load.
+ * @param {HandlerSettings} settings - Settings Object.
+ */
 function loadBaseCMD(client, cmd, settings) {
 	if(!client.commands.has(cmd) && settings.defaultcmds) {
 		const props = require(`./commands/${cmd}.js`); // => load each one
