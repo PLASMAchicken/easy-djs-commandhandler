@@ -19,7 +19,7 @@ class CommandHander {
 	* @example new commandhandler(client, { prefix: '?', owner: ['193406800614129664'], folder: 'cmds' });
 	*/
 	constructor(client, settings) {
-		if(!client) throw new TypeError('Need Discord#Client');
+		if(!client) throw new TypeError('Needs Client');
 		let errorc = 0;
 		if(!settings) settings = {};
 		if(!settings.folder) settings.folder = 'commands';
@@ -41,9 +41,9 @@ class CommandHander {
 			};
 		}
 
-		fs.readdir(`./${settings.folder}/`, (err, files) => { // read dir
-			if(err) { // err =>
-				if (err.errno == -4058) { // err code = -4058 => dir not present
+		let files=fs.readdirSync(`./${settings.folder}/`)  // read dir
+			if(!files) { // err =>
+				if (!files) { // err.errno = -4058 => dir not present
 					fs.mkdirSync(`./${settings.folder}/`); // => make dir
 					console.log(`Command settings.folder was not found! Creating ./${settings.folder}/ \n Please restart Bot!`); // => log
 					return process.exit(); // => return
@@ -97,8 +97,7 @@ class CommandHander {
 			loadBaseCMD(client, 'help');
 			loadBaseCMD(client, 'eval');
 
-			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
-		}); // => close commandhandler and start client
+			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`); // => close commandhandler and start client
 	}
 
 	/**
