@@ -31,7 +31,7 @@ Module to run and handle Commands.
 | Param | Type | Description |
 | --- | --- | --- |
 | client | <code>Client</code> | Discord.js Client. |
-| settings | [<code>HandlerSettings</code>](#HandlerSettings) | Settings.folder to get Commands from. |
+| settings | [<code>HandlerSettings</code>](#HandlerSettings) | Settings Object. |
 
 **Example**  
 ```js
@@ -63,7 +63,9 @@ Options for the Coammnd Handler.
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| prefix | <code>string</code> | <code>&quot;!&quot;</code> | Prefix. |
-| owner | <code>Array</code> | <code>[</code> | Array of ids with Bot Perms. |
-| folder | <code>string</code> | <code>&quot;commands&quot;</code> | Folder where the Commands are in. |
+| [prefix] | <code>string</code> | <code>&quot;!&quot;</code> | Prefix. |
+| [owner] | <code>Array</code> | <code>[]</code> | Array of ids with Bot Perms. |
+| [folder] | <code>string</code> | <code>&quot;commands&quot;</code> | Folder where the Commands are in. |
+| [cooldowns] | <code>\*</code> | <code>true</code> | If Cooldowns are Enabled, either true/false, or Collection |
+| [defaultcmds] | <code>boolean</code> | <code>true</code> | Load Default Commands. |
 

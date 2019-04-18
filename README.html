@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>Module to make an fast setup Discord Bot, simply do:</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body>
+        <h1 id="module-to-make-an-fast-setup-discord-bot-simply-do">Module to make an fast setup Discord Bot, simply do:</h1>
+<pre><code class="language-js"><div><span class="hljs-keyword">const</span> Discord = <span class="hljs-built_in">require</span>(<span class="hljs-string">'discord.js'</span>);
+<span class="hljs-keyword">const</span> commandHandler = <span class="hljs-built_in">require</span>(<span class="hljs-string">'easy-djs-commandhandler'</span>);
+
+<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> Discord.Client();
+<span class="hljs-keyword">const</span> handle = <span class="hljs-keyword">new</span> commandHandler(client, {<span class="hljs-attr">owner</span>: [<span class="hljs-string">'193406800614129664'</span>]});
+
+client.on(<span class="hljs-string">'message'</span>, message =&gt; {
+    handle.handle(client, message);
+})
+client.on(<span class="hljs-string">'messageUpdate'</span>, (oldmessage, message) =&gt; {
+    handle.handle(client, message);
+})
+
+client.login()
+</div></code></pre>
+<h1 id="then-you-can-make-your-own-commands-in-the-commands--customizeable--folder-by-doing">Then you can make your own Commands in the <code>commands</code> ( customizeable ) folder, by doing:</h1>
+<pre><code class="language-js"><div><span class="hljs-keyword">const</span> { Client, Message } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'discord.js'</span>);
+<span class="hljs-comment">/**
+ * @param {Client} client - Discord.js Client.
+ * @param {Message} message - Discord.js Message.
+ * @param {Array} args - Array with parsed args.
+ */</span>
+<span class="hljs-built_in">module</span>.exports.run = <span class="hljs-keyword">async</span> (client, message, args) =&gt; {
+	message.channel.send(<span class="hljs-string">'Hello World!'</span>);
+};
+
+<span class="hljs-built_in">module</span>.exports.help = {
+	<span class="hljs-attr">name</span>: <span class="hljs-string">'cmdname'</span>,
+	<span class="hljs-attr">description</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">hideinhelp</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">requires</span>: [<span class="hljs-string">'botowner'</span>, <span class="hljs-string">'guild'</span>, <span class="hljs-string">'dm'</span>],
+	<span class="hljs-attr">usage</span>: <span class="hljs-string">'&lt;prefix&gt;cmdname'</span>,   <span class="hljs-comment">// &lt;prefix&gt; gets replaced with the prefix</span>
+	aliases: [<span class="hljs-string">'cmdalias'</span>],
+	<span class="hljs-comment">// cooldownGroup: 'example' || use this to cooldown all the commands in that group</span>
+};  <span class="hljs-comment">// to get a category just make a sub-folder</span>
+</div></code></pre>
+<h1 id="using-custompresistant-cooldowns">Using Custom/Presistant Cooldowns</h1>
+<pre><code class="language-js"><div>
+<span class="hljs-keyword">const</span> Enmap = <span class="hljs-built_in">require</span>(<span class="hljs-string">"enmap"</span>);
+
+<span class="hljs-comment">// Normal enmap with default options</span>
+<span class="hljs-keyword">const</span> cooldownsEnmap = <span class="hljs-keyword">new</span> Enmap({<span class="hljs-attr">name</span>: <span class="hljs-string">"cooldowns"</span>});
+
+<span class="hljs-keyword">const</span> handle = <span class="hljs-keyword">new</span> commandHandler(client, {<span class="hljs-attr">owner</span>: [<span class="hljs-string">'193406800614129664'</span>], <span class="hljs-attr">cooldowns</span>: cooldownsEnmap});
+
+</div></code></pre>
+<h2 id="more-info-can-be-found-in-docsmd">More Info can be found in <a href="https://github.com/PLASMAchicken/easy-djs-commandhandler/blob/master/docs.md">docs.md</a></h2>
+
+    </body>
+    </html>
