@@ -1,32 +1,37 @@
 const fs = require('fs');
 const { Message, Client, Collection } = require('discord.js');
-
+const ms = require('ms');
 class CommandHander {
 	/**
  	* Options for the Coammnd Handler.
  	* @typedef {Object} HandlerSettings
 	*
-	* @property {string} [prefix='!'] Prefix.
+	* @property {string} [prefix=!] Prefix.
  	* @property {Array} [owner=[]] Array of ids with Bot Perms.
- 	* @property {string} [folder='commands'] Folder where the Commands are in.
+	* @property {string} [folder=commands] Folder where the Commands are in.
+	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection
+	* @property {boolean} [defaultcmds=true] - Load Default Commands.
  	*/
 
 	/**
 	* Module to run and handle Commands.
 	*
 	* @param {Client} client - Discord.js Client.
-	* @param {HandlerSettings} settings - Settings.folder to get Commands from.
+	* @param {HandlerSettings} settings - Settings Object.
 	* @example new commandhandler(client, { prefix: '?', owner: ['193406800614129664'], folder: 'cmds' });
 	*/
-	constructor(client, settings) {
-		if(!client) throw new TypeError('Needs Client');
+	constructor(client, settings={prefix:'!',owner:[],folder:commands,cooldowns:true,defaultcmds:false}) {
+		if(!client) throw new TypeError('Need Discord#Client');
 		let errorc = 0;
-		if(!settings) settings = {};
-		if(!settings.folder) settings.folder = 'commands';
-		if(!settings.prefix) settings.prefix = '!';
+		if(settings.cooldowns === true) {
+			settings.cooldowns = new Collection();
+			client.cooldowns = settings.cooldowns;
+		}
+		else {client.cooldowns = settings.cooldowns;}
+
+		if(settings.defaultcmds !== true) settings.defaultcmds = false;
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
-		if(!settings.owner) client.owners = [];
-		else if (typeof settings.owner == 'string') client.owners = [settings.owner];
+		if (typeof settings.owner == 'string') client.owners = [settings.owner];
 		else if (Array.isArray(settings.owner)) client.owners = settings.owner;
 		else client.owners = [];
 		if(!client.prefix) client.prefix = settings.prefix;
@@ -41,11 +46,11 @@ class CommandHander {
 			};
 		}
 
-		let files=fs.readdirSync(`./${settings.folder}/`)  // read dir
-			if(!files) { // err =>
-				if (!files) { // err.errno = -4058 => dir not present
+		fs.readdir(`./${settings.folder}/`, (err, files) => { // read dir
+			if(err) { // err =>
+				if (err.errno == -4058) { // err code = -4058 => dir not present
 					fs.mkdirSync(`./${settings.folder}/`); // => make dir
-					console.log(`Command settings.folder was not found! Creating ./${settings.folder}/ \n Please restart Bot!`); // => log
+					console.log(`Command Folder was not found! Creating ./${settings.folder}/ \n Please restart Bot!`); // => log
 					return process.exit(); // => return
 				}
 				else{ // Unknow Error =>
@@ -94,10 +99,11 @@ class CommandHander {
 
 
 			console.log('Categorys loaded or none found!\n-------------------------------');
-			loadBaseCMD(client, 'help');
-			loadBaseCMD(client, 'eval');
+			loadBaseCMD(client, 'help', this.settings);
+			loadBaseCMD(client, 'eval', this.settings);
 
-			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`); // => close commandhandler and start client
+			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
+		}); // => close commandhandler and start client
 	}
 
 	/**
@@ -125,22 +131,25 @@ class CommandHander {
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
 			}
-			if (((cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) && (!message.guild || !['490999695422783489', '511221411805790209'].includes(message.guild.id)))) return message.reply(client.format('This Command is indevelopment! Please join <mainserverinvite> and use it there until it is finished!')), message.channel.stopTyping(true);
-			/* const now = Date.now();
-			const cooldownAmount = ms(cmd.help.cooldown || '5s');
-			if (!stats.cooldowns[cmd.help.name]) stats.cooldowns[cmd.help.name] = now - cooldownAmount;
-			const cooldown = stats.cooldowns[cmd.help.name];
-			const expirationTime = cooldown + cooldownAmount;
-			if (now < expirationTime) {
-				const timeLeft = ms(expirationTime - now, {
-					long: true,
-				});
-				return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
+			if(client.cooldowns) {
+				const cooldowns = client.cooldowns.get(message.author.id) || {};
+				const now = Date.now();
+				const cooldownAmount = ms(cmd.help.cooldown || '5s');
+				const cooldownName = cmd.help.cooldownGroup || cmd.help.name;
+				if (!cooldowns[cooldownName]) cooldowns[cooldownName] = now - cooldownAmount;
+				const cooldown = cooldowns[cooldownName];
+				const expirationTime = cooldown + cooldownAmount;
+				if (now < expirationTime) {
+					const timeLeft = ms(expirationTime - now, {
+						long: true,
+					});
+					return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
+				}
+				cooldowns[cooldownName] = now;
+				client.cooldowns.set(message.author.id, cooldowns);
 			}
-			stats.cooldowns[cmd.help.name] = now;
-			 */
 			cmd.run(client, message, args);
-			if (cmd.help.category === 'indevelopment' && !['193406800614129664', '211795109132369920'].includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
+			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 			message.channel.stopTyping(true);
 		}
 	}
@@ -149,8 +158,16 @@ class CommandHander {
 
 module.exports = CommandHander;
 
-function loadBaseCMD(client, cmd) {
-	if(!client.commands.has(cmd)) {
+/**
+ * Function to load Base Commmands that come with the Package.
+ *
+ * @private
+ * @param {Client} client - Discord.JS Client.
+ * @param {string} cmd - Name of Commmand to load.
+ * @param {HandlerSettings} settings - Settings Object.
+ */
+function loadBaseCMD(client, cmd, settings) {
+	if(!client.commands.has(cmd) && settings.defaultcmds) {
 		const props = require(`./commands/${cmd}.js`); // => load each one
 
 		console.log(`Loaded Default Command: ${cmd}`); // => log that command got loaded
