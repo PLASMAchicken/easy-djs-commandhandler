@@ -7,7 +7,7 @@ class Command {
 	 */
 	/**
 	 *
-	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,clientPermissions:Discord.PermissionResolvable[]}} param0
+	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,requirePermissions:Discord.PermissionResolvable[]}} param0
 	 */
 	constructor({
 		name,
@@ -16,7 +16,7 @@ class Command {
 		requires = [],
 		usage,
 		aliases = [],
-		clientPermissions = [],
+		requirePermissions = [],
 	}) {
 		if (!name) {
 			throw new Error('name required for Command Class');
@@ -28,7 +28,7 @@ class Command {
 		this.help.requires = requires;
 		this.help.usage = usage;
 		this.help.aliases = aliases;
-		this.help.clientPermissions = clientPermissions;
+		this.help.requirePermissions = requirePermissions;
 		this.run = () => {};
 		return this;
 	}

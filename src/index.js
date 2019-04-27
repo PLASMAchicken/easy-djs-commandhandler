@@ -153,8 +153,8 @@ class CommandHandler {
 				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);
 			}
-			if(cmd.help.clientPermissions && cmd.help.clientPermissions.length>0){
-				if(message.guild.me.hasPermission(cmd.help.clientPermissions)){
+			if(cmd.help.requirePermissions && cmd.help.requirePermissions.length>0){
+				if(!message.guild.me.hasPermission(cmd.help.requirePermissions)){
 					return message.reply('missing permissions to execute command')
 				}
 			}
