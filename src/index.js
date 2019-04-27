@@ -159,8 +159,8 @@ class CommandHander {
 		}
 	}
 }
-
-
+const Command=require('./Command');
+module.exports.Command = Command;
 module.exports = CommandHander;
 
 /**
