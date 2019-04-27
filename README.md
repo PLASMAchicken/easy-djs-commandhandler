@@ -40,7 +40,7 @@ module.exports.help = {
 };  // to get a category just make a sub-folder
 ```
 or by using the Command Class:
-````js
+```js
 const { Command } = require('easy-djs-commandhandler');
 module.exports = new Command({ 
 	name: 'cmdname',
