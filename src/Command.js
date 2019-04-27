@@ -28,6 +28,7 @@ class Command {
 		this.help.usage = usage;
 		this.help.aliases = aliases;
 		this.run = () => {};
+		return this;
 	}
 	/**
 	 *  Assigns the command executor function to the callback provided.
@@ -36,6 +37,7 @@ class Command {
 	 */
 	execute(callback) {
 		this.run = callback;
+		return this;
 	}
 }
 module.exports = Command;
