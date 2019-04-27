@@ -160,8 +160,8 @@ class CommandHander {
 	}
 }
 const Command = require('./Command');
-module.exports.Command = Command;
-module.exports = CommandHander;
+exports.Command = Command;
+exports.Handler = CommandHander;
 
 /**
  * Function to load Base Commmands that come with the Package.
