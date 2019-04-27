@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { Message, Client, Collection } = require('discord.js');
 const ms = require('ms');
-class CommandHander {
+class CommandHandler {
 	/**
  	* Options for the Coammnd Handler.
  	* @typedef {Object} HandlerSettings
@@ -159,9 +159,9 @@ class CommandHander {
 		}
 	}
 }
-
-
-module.exports = CommandHander;
+const Command = require('./Command');
+module.exports.Command = Command;
+module.exports.Handler = CommandHandler;
 
 /**
  * Function to load Base Commmands that come with the Package.
