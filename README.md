@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 const commandHandler = require('easy-djs-commandhandler');
 
 const client = new Discord.Client();
-const handle = new commandHandler(client, {owner: ['193406800614129664']});
+const handle = new commandHandler.Handler(client, {owner: ['193406800614129664']});
 
 client.on('message', message => {
     handle.handle(client, message);
@@ -39,7 +39,22 @@ module.exports.help = {
 	// cooldownGroup: 'example' || use this to cooldown all the commands in that group
 };  // to get a category just make a sub-folder
 ```
-
+or by using the Command Class:
+````js
+const { Command } = require('easy-djs-commandhandler');
+module.exports = new Command({ 
+	name: 'cmdname',
+	description: '',
+    hideinhelp: false,
+    requires: ['botowner', 'guild', 'dm'],
+	usage: '<prefix>cmdname',   // <prefix> gets replaced with the prefix
+	aliases: ['cmdalias'],
+	// cooldownGroup: 'example' || use this to cooldown all the commands in that group
+	// to get a category just make a sub-folder
+	}).execute((client, message, args) => {
+	message.channel.send('Hello Discord!');
+});
+```
 
 # Using Custom/Presistant Cooldowns
 
