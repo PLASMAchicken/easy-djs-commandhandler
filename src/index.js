@@ -153,6 +153,11 @@ class CommandHandler {
 				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);
 			}
+			if(cmd.help.clientPermissions && cmd.help.clientPermissions.length>0){
+				if(message.guild.me.hasPermission(cmd.help.clientPermissions)){
+					return message.reply('missing permissions to execute command')
+				}
+			}
 			cmd.run(client, message, args);
 			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 			message.channel.stopTyping(true);
