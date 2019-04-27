@@ -54,4 +54,3 @@ const handle = new commandHandler(client, {owner: ['193406800614129664'], cooldo
 
 ```
 
-## More Info can be found in [docs.md](https://github.com/PLASMAchicken/easy-djs-commandhandler/blob/master/docs.md)
