@@ -134,7 +134,7 @@ class CommandHandler {
 			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length > 0) {
 				let missing = ['ERROR'];
 				if(message.guild) {
-					missing = cmd.help.requiresBotPermissions.filter(permission => message.guild.me.hasPermission(permission));
+					missing = cmd.help.requiresBotPermissions.filter(permission => !message.guild.me.hasPermission(permission));
 				}
 				else {
 					missing = cmd.help.requiresBotPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
