@@ -131,6 +131,11 @@ class CommandHandler {
 			message.channel.startTyping();
 			if (cmd.help.disableindm == true) return message.channel.send('Sorry this Command is not yet supported!'), message.channel.stopTyping(true); // check if command is supported in dm if not => return
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
+			if(cmd.help.requirePermissions && cmd.help.requirePermissions.length > 0) {
+				if(!message.guild.me.hasPermission(cmd.help.requirePermissions)) {
+					return message.reply('missing permissions to execute command'), message.channel.stopTyping(true);
+				}
+			}
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
@@ -152,11 +157,6 @@ class CommandHandler {
 				}
 				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);
-			}
-			if(cmd.help.requirePermissions && cmd.help.requirePermissions.length > 0) {
-				if(!message.guild.me.hasPermission(cmd.help.requirePermissions)) {
-					return message.reply('missing permissions to execute command'), message.channel.stopTyping(true);
-				}
 			}
 			cmd.run(client, message, args);
 			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
