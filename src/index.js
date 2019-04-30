@@ -131,8 +131,8 @@ class CommandHandler {
 			message.channel.startTyping();
 			if (cmd.help.disableindm == true) return message.channel.send('Sorry this Command is not yet supported!'), message.channel.stopTyping(true); // check if command is supported in dm if not => return
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
-			if(cmd.help.requirePermissions && cmd.help.requirePermissions.length > 0) {
-				if(!message.guild.me.hasPermission(cmd.help.requirePermissions)) {
+			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length > 0) {
+				if(!message.guild.me.hasPermission(cmd.help.requiresBotPermissions)) {
 					return message.reply('missing permissions to execute command'), message.channel.stopTyping(true);
 				}
 			}
