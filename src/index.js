@@ -120,8 +120,7 @@ class CommandHandler {
  	*/
 	handle(client, message) {
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
-		if (message.system) return;
-		if (message.author.bot) return;
+		if (message.system || message.author.bot) return;
 		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|\\${client.prefix})\\s*`);
 		if (!prefixRegex.test(message.content)) return;
 		const [, matchedPrefix] = message.content.match(prefixRegex);
@@ -131,7 +130,7 @@ class CommandHandler {
 		if (cmd) {
 			message.channel.startTyping();
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
-			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length > 0) {
+			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length) {
 				let missing = ['ERROR'];
 				if(message.guild) {
 					missing = cmd.help.requiresBotPermissions.filter(permission => !message.guild.me.hasPermission(permission));
@@ -158,7 +157,7 @@ class CommandHandler {
 					const timeLeft = ms(expirationTime - now, {
 						long: true,
 					});
-					return message.reply(`please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
+					return message.reply(`Please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
 				}
 				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);

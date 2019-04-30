@@ -1,5 +1,4 @@
-/* eslint no-unused-vars: 0  */
-const Discord = require('discord.js');
+const { Message, Client, PermissionResolvable } = require('discord.js');
 class Command {
 	/**
 	 *
@@ -7,7 +6,7 @@ class Command {
 	 */
 	/**
 	 *
-	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,requiresBotPermissions:Discord.PermissionResolvable[]}} param0
+	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,requiresBotPermissions:PermissionResolvable[]}} param0 - Constructor.
 	 */
 	constructor({
 		name,
@@ -29,13 +28,14 @@ class Command {
 		this.help.usage = usage;
 		this.help.aliases = aliases;
 		this.help.requiresBotPermissions = requiresBotPermissions;
-		this.run = () => {};
+		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
 		return this;
 	}
 	/**
 	 *  Assigns the command executor function to the callback provided.
 	 *
-	 * @param {(client:Discord.Client,message:Discord.Message,args:string[])=>void} callback
+	 * @param {(client:Discord.Client,message:Discord.Message,args:string[])} callback
+	 * @returns {Command} Command Class.
 	 */
 	execute(callback) {
 		this.run = callback;
