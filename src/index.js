@@ -132,8 +132,13 @@ class CommandHandler {
 			if (cmd.help.disableindm == true) return message.channel.send('Sorry this Command is not yet supported!'), message.channel.stopTyping(true); // check if command is supported in dm if not => return
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
 			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length > 0) {
-				if(!message.guild) return message.channel.send('I need special Permissions for this, but this is a DM.'), message.channel.stopTyping(true);
-				const missing = cmd.help.requiresBotPermissions.filter(permission => message.guild.me.hasPermission(permission));
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requiresBotPermissions.filter(permission => message.guild.me.hasPermission(permission));
+				}
+				else {
+					missing = cmd.help.requiresBotPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
+				}
 				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
 			}
 			if (cmd.help.requires) {
