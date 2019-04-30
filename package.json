@@ -1,6 +1,6 @@
 {
   "name": "easy-djs-commandhandler",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Package to create an easy discord bot",
   "main": "./src/index",
   "scripts": {

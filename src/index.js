@@ -129,7 +129,6 @@ class CommandHandler {
 		const cmd = client.commands.get(cmdname) || client.commands.find(com => com.help.aliases && com.help.aliases.includes(cmdname));
 		if (cmd) {
 			message.channel.startTyping();
-			if (cmd.help.disableindm == true) return message.channel.send('Sorry this Command is not yet supported!'), message.channel.stopTyping(true); // check if command is supported in dm if not => return
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
