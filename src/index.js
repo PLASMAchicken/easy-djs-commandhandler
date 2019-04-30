@@ -119,6 +119,7 @@ class CommandHandler {
  	* @example commandhandler.run(client, message);
  	*/
 	handle(client, message) {
+		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system) return;
 		if (message.author.bot) return;
 		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|\\${client.prefix})\\s*`);

@@ -36,6 +36,7 @@ module.exports.help = {
     requires: ['botowner', 'guild', 'dm'],
 	usage: '<prefix>cmdname',   // <prefix> gets replaced with the prefix
 	aliases: ['cmdalias'],
+	requiresBotPermissions: ['EMBED_LINKS'], // Array containing Permissions that need to be checked, SEND_MESSAGES, is included automatically
 	// cooldownGroup: 'example' || use this to cooldown all the commands in that group
 };  // to get a category just make a sub-folder
 ```
@@ -49,6 +50,7 @@ module.exports = new Command({
     requires: ['botowner', 'guild', 'dm'],
 	usage: '<prefix>cmdname',   // <prefix> gets replaced with the prefix
 	aliases: ['cmdalias'],
+	requiresBotPermissions: ['EMBED_LINKS'], // Array containing Permissions that need to be checked, SEND_MESSAGES, is included automatically
 	// cooldownGroup: 'example' || use this to cooldown all the commands in that group
 	// to get a category just make a sub-folder
 	}).execute((client, message, args) => {
