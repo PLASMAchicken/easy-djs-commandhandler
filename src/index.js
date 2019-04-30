@@ -119,6 +119,7 @@ class CommandHandler {
  	* @example commandhandler.run(client, message);
  	*/
 	handle(client, message) {
+		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system) return;
 		if (message.author.bot) return;
 		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|\\${client.prefix})\\s*`);
@@ -130,6 +131,16 @@ class CommandHandler {
 		if (cmd) {
 			message.channel.startTyping();
 			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
+			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length > 0) {
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requiresBotPermissions.filter(permission => message.guild.me.hasPermission(permission));
+				}
+				else {
+					missing = cmd.help.requiresBotPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
+				}
+				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
+			}
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);

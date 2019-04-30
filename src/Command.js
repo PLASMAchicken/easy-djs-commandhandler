@@ -2,12 +2,12 @@
 const Discord = require('discord.js');
 class Command {
 	/**
-     *
-     * @typedef {'botowner'|'guild'|'dm'} Requires
-     */
+	 *
+	 * @typedef {'botowner'|'guild'|'dm'} Requires
+	 */
 	/**
 	 *
-	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>}} param0
+	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,requiresBotPermissions:Discord.PermissionResolvable[]}} param0
 	 */
 	constructor({
 		name,
@@ -16,6 +16,7 @@ class Command {
 		requires = [],
 		usage,
 		aliases = [],
+		requiresBotPermissions = [],
 	}) {
 		if (!name) {
 			throw new Error('name required for Command Class');
@@ -27,6 +28,7 @@ class Command {
 		this.help.requires = requires;
 		this.help.usage = usage;
 		this.help.aliases = aliases;
+		this.help.requiresBotPermissions = requiresBotPermissions;
 		this.run = () => {};
 		return this;
 	}
