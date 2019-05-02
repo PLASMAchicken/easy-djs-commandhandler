@@ -88,7 +88,7 @@ class CommandHandler {
 				const catfiles = fs.readdirSync(`./${settings.folder}/` + category).filter(f => f.split('.').pop() === 'js' && !fs.statSync(process.cwd() + `/${settings.folder}/` + category + '/' + f).isDirectory());
 				catfiles.forEach((f, i) => {
 					try{
-						const props = require(`../${settings.folder}/${category}/${f}`); // => load each one
+						const props = require(`${process.cwd()}/${settings.folder}/${category}/${f}`); // => load each one
 
 						console.log(`${i} ${f} in category ${category} loaded!`); // => log that command got loaded
 						props.help.category = category;
