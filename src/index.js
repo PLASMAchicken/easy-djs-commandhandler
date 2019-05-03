@@ -88,7 +88,7 @@ class CommandHandler {
 				const catfiles = fs.readdirSync(`./${settings.folder}/` + category).filter(f => f.split('.').pop() === 'js' && !fs.statSync(process.cwd() + `/${settings.folder}/` + category + '/' + f).isDirectory());
 				catfiles.forEach((f, i) => {
 					try{
-						const props = require(`../${settings.folder}/${category}/${f}`); // => load each one
+						const props = require(`${process.cwd()}/${settings.folder}/${category}/${f}`); // => load each one
 
 						console.log(`${i} ${f} in category ${category} loaded!`); // => log that command got loaded
 						props.help.category = category;
@@ -121,7 +121,7 @@ class CommandHandler {
 	handle(client, message) {
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
-		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|\\${client.prefix})\\s*`);
+		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
 		if (!prefixRegex.test(message.content)) return;
 		const [, matchedPrefix] = message.content.match(prefixRegex);
 		const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
