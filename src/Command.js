@@ -34,7 +34,7 @@ class Command {
 	/**
 	 *  Assigns the command executor function to the callback provided.
 	 *
-	 * @param {(client:Discord.Client,message:Discord.Message,args:string[])} callback
+	 * @param {(client:Client,message:Message,args:string[])} callback
 	 * @returns {Command} Command Class.
 	 */
 	execute(callback) {
