@@ -31,10 +31,20 @@ class Command {
 		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
 		return this;
 	}
+
+	/**
+	 *  Callback for the Command
+	 *
+	 * @callback cmdCallback
+	 * @param {Client} client
+	 * @param {Message} message
+	 * @param {String[]} args
+	 * @returns {any}
+	 */
 	/**
 	 *  Assigns the command executor function to the callback provided.
 	 *
-	 * @param {(client:Client,message:Message,args:string[])} callback
+	 * @param {cmdCallback} callback - Callback for the Command.
 	 * @returns {Command} Command Class.
 	 */
 	execute(callback) {
