@@ -8,12 +8,12 @@ class Command {
 	 * @typedef {Object} cmdConstructor
 	 *
 	 * @property {string} name
-	 * @property {string} description
-	 * @property {Boolean} hideinhelp
-	 * @property {Requires} require
-	 * @property {string} usage
-	 * @property {Array<string>} aliases
-	 * @property {PermissionResolvable[]} requiresBotPermissions
+	 * @property {string} [description]
+	 * @property {Boolean} [hideinhelp=false]
+	 * @property {Requires} [require=[]]
+	 * @property {string} [usage]
+	 * @property {Array<string>} [aliases=[]]
+	 * @property {PermissionResolvable[]} [requiresBotPermissions=[]]
 	 */
 	/**
 	 *
