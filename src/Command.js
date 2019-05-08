@@ -5,8 +5,19 @@ class Command {
 	 * @typedef {'botowner'|'guild'|'dm'} Requires
 	 */
 	/**
+	 * @typedef {Object} cmdConstructor
 	 *
-	 * @param {{name:string,description:string,hideinhelp:boolean,requires:Requires[],usage:string,aliases:Array<string>,requiresBotPermissions:PermissionResolvable[]}} param0 - Constructor.
+	 * @property {string} name
+	 * @property {string} description
+	 * @property {Boolean} hideinhelp
+	 * @property {Requires} require
+	 * @property {string} usage
+	 * @property {Array<string>} aliases
+	 * @property {PermissionResolvable[]} requiresBotPermissions
+	 */
+	/**
+	 *
+	 * @param {cmdConstructor} param0 - Constructor.
 	 */
 	constructor({
 		name,
