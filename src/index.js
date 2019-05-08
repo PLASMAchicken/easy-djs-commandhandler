@@ -121,7 +121,7 @@ class CommandHandler {
 	handle(client, message) {
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
-		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
 		if (!prefixRegex.test(message.content)) return;
 		const [, matchedPrefix] = message.content.match(prefixRegex);
 		const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);

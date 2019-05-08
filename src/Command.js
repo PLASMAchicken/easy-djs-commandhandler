@@ -1,19 +1,15 @@
-const { Message, Client, PermissionResolvable } = require('discord.js');
+const discord = require('discord.js');
 class Command {
-	/**
-	 *
-	 * @typedef {'botowner'|'guild'|'dm'} Requires
-	 */
 	/**
 	 * @typedef {Object} cmdConstructor
 	 *
 	 * @property {string} name
 	 * @property {string} [description]
 	 * @property {Boolean} [hideinhelp=false]
-	 * @property {Requires} [require=[]]
+	 * @property {'botowner'|'guild'|'dm'} [require=[]]
 	 * @property {string} [usage]
 	 * @property {Array<string>} [aliases=[]]
-	 * @property {PermissionResolvable[]} [requiresBotPermissions=[]]
+	 * @property {discord.PermissionResolvable} [requiresBotPermissions=[]]
 	 */
 	/**
 	 *
@@ -47,8 +43,8 @@ class Command {
 	 *  Callback for the Command
 	 *
 	 * @callback cmdCallback
-	 * @param {Client} client
-	 * @param {Message} message
+	 * @param {discord.Client} client
+	 * @param {discord.Message} message
 	 * @param {String[]} args
 	 * @returns {any}
 	 */

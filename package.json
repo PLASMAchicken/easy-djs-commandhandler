@@ -1,10 +1,11 @@
 {
   "name": "easy-djs-commandhandler",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Package to create an easy discord bot",
   "main": "./src/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src"
   },
   "author": "plasmachicken",
   "repository": {
@@ -17,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "eslint": "^5.15.1",
-    "eslint-plugin-jsdoc": "^4.4.1"
+    "eslint-plugin-jsdoc": "^4.8.3"
   },
   "dependencies": {
     "discord.js": "^11.4.2",
