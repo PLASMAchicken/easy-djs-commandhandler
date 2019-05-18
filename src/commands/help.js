@@ -7,9 +7,12 @@ const { Client, Message } = require('discord.js');
  */
 module.exports.run = async (client, message, args) => {
 	if(!args.length) {
-		return message.author.send(
-			client.commands.map(props => props.help.hideinhelp ? '' : `**Command: ${props.help.name}**\n${props.help.category ? `\tCategory: ${props.help.category}\n` : '' }${props.help.description ? `\tDescription: ${props.help.description}\n` : '' }${props.help.usage ? `\tUsage: ${client.format(props.help.usage)}\n` : '' }${props.help.aliases ? `\tAliases: [ ${props.help.aliases.join(', ')} ]\n` : '' }`).filter(data => data !== '')
-			, { split: { char: '\n\n' } })
+		let commands = {};
+		if (client.owners.includes(message.author.id)) commands = client.commands;
+		else commands = client.commands.filter(cmd => !cmd.help.hideinhelp);
+		const commandList = commands.map(props => `${props.help.hideinhelp ? '__' : ''}**Command: ${props.help.name}**${props.help.hideinhelp ? '\t __--hidden-- ( only visible to you because you are owner ) ' : ''}\n${props.help.category ? `\tCategory: ${props.help.category}\n` : '' }${props.help.description ? `\tDescription: ${props.help.description}\n` : '' }${props.help.usage ? `\tUsage: ${client.format(props.help.usage)}\n` : '' }${props.help.aliases ? (props.help.aliases.length ? `\tAliases: [ ${props.help.aliases.join(', ')} ]\n` : '') : '' }`).filter(data => data !== '');
+
+		return message.author.send(commandList, { split: { char: '\n\n' } })
 			.then(() => {
 				if (message.channel.type === 'dm') return;
 				message.reply('I\'ve sent you a DM with all my commands!');
