@@ -33,7 +33,7 @@ module.exports.run = async (client, message, args) => {
 module.exports.help = {
 	name: 'eval',
 	description: 'evals code',
-	hideinhelp: false,
+	hideinhelp: true,
 	aliases: ['e'],
 	requires: ['botowner'],
 	cooldown: '1ms',
