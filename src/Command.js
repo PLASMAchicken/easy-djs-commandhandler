@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const discord = require('discord.js');
 class Command {
 	/**
