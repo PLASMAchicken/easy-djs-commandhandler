@@ -4,13 +4,14 @@ class Command {
 	/**
 	 * @typedef {Object} cmdConstructor
 	 *
-	 * @property {string} name
-	 * @property {string} [description]
-	 * @property {Boolean} [hideinhelp=false]
-	 * @property {('botowner'|'guild'|'dm')[]} [requires=[]]
-	 * @property {string} [usage]
-	 * @property {Array<string>} [aliases=[]]
-	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions=[]]
+	 * @property {string} name - The Command name, used for <prefix><command.name>.
+	 * @property {string} [description] - The Command Description, for the help command.
+	 * @property {Boolean} [hideinhelp=false] - Should the Command be hidden for normal users in help?
+	 * @property {('botowner'|'guild'|'dm')[]} [requires=[]] - Does the Command require a guild/dm or botowner?
+	 * @property {string} [usage] - The Command Usage, for the help command.
+	 * @property {string} [cooldown] - The Cooldown Overwrite.
+	 * @property {Array<string>} [aliases=[]] - The Aliases, used for <prefix><command.alias>.
+	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions=[]] - Permissions that the bot needs.
 	 */
 	/**
 	 *
@@ -22,6 +23,7 @@ class Command {
 		hideinhelp = false,
 		requires = [],
 		usage,
+		cooldown,
 		aliases = [],
 		requiresBotPermissions = [],
 	}) {
@@ -34,6 +36,7 @@ class Command {
 		this.help.hideinhelp = hideinhelp;
 		this.help.requires = requires;
 		this.help.usage = usage;
+		this.help.cooldown = cooldown;
 		this.help.aliases = aliases;
 		this.help.requiresBotPermissions = requiresBotPermissions;
 		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
