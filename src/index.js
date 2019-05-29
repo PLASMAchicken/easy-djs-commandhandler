@@ -106,6 +106,7 @@ class CommandHandler {
 			console.log('Categorys loaded or none found!\n-------------------------------');
 			loadBaseCMD(client, 'help', this.settings);
 			loadBaseCMD(client, 'eval', this.settings);
+			loadBaseCMD(client, 'usage', this.settings);
 
 			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
 		}); // => close commandhandler and start client
@@ -162,6 +163,8 @@ class CommandHandler {
 				cooldowns[cooldownName] = now;
 				client.cooldowns.set(message.author.id, cooldowns);
 			}
+			if(!cmd.help.used) cmd.help.used = 0;
+			cmd.help.used += 1;
 			cmd.run(client, message, args);
 			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 			message.channel.stopTyping(true);
