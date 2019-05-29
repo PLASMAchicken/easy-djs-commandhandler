@@ -11,7 +11,7 @@ class Command {
 	 * @property {string} [usage]
 	 * @property {Array<string>} [aliases=[]]
 	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions=[]]
-	 * @property {string} cooldown
+	 * @property {string} [cooldown]
 	 */
 	/**
 	 *
