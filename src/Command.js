@@ -11,6 +11,7 @@ class Command {
 	 * @property {string} [usage]
 	 * @property {Array<string>} [aliases=[]]
 	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions=[]]
+	 * @property {string} cooldown
 	 */
 	/**
 	 *
@@ -24,6 +25,7 @@ class Command {
 		usage,
 		aliases = [],
 		requiresBotPermissions = [],
+		cooldown = '5s',
 	}) {
 		if (!name) {
 			throw new Error('name required for Command Class');
@@ -36,7 +38,10 @@ class Command {
 		this.help.usage = usage;
 		this.help.aliases = aliases;
 		this.help.requiresBotPermissions = requiresBotPermissions;
-		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
+		this.help.cooldown = cooldown;
+		this.run = (client, message) => {
+			message.channel.send('This Command does not have a Function!');
+		};
 		return this;
 	}
 
