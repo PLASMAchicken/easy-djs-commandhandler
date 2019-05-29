@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { Message, Client, Collection } = require('discord.js');
 const ms = require('ms');
+const sleep = require('util').promisify(setTimeout);
 class CommandHandler {
 	/**
  	* Options for the Coammnd Handler.
@@ -11,6 +12,8 @@ class CommandHandler {
 	* @property {string} [folder=commands] Folder where the Commands are in.
 	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection
 	* @property {boolean} [defaultcmds=true] - Load Default Commands.
+	* @property {string} [maxWait='2s'] - Max Time to wait for Cooldown.
+	* @property {string} [defaultCooldown='5s'] - Default Cooldown if Command does not overwrite it.
  	*/
 
 	/**
@@ -26,6 +29,9 @@ class CommandHandler {
 		if(!settings) settings = {};
 		if(!settings.folder) settings.folder = 'commands';
 		if(!settings.prefix) settings.prefix = '!';
+		if(!settings.defaultCooldown) settings.defaultCooldown = '5s';
+		if(!settings.maxWait) settings.maxWait = 2000;
+		else settings.maxWait = ms(settings.maxWait);
 		if(settings.cooldowns === undefined) settings.cooldowns = true;
 		if(settings.cooldowns === true) {
 			settings.cooldowns = new Collection();
@@ -33,7 +39,7 @@ class CommandHandler {
 		}
 		else {client.cooldowns = settings.cooldowns;}
 
-		if(settings.defaultcmds !== true) settings.defaultcmds = false;
+		if(settings.defaultcmds !== false) settings.defaultcmds = true;
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
 		if(!settings.owner) client.owners = [];
 		else if (typeof settings.owner == 'string') client.owners = [settings.owner];
@@ -119,7 +125,7 @@ class CommandHandler {
  	* @param {Message} message - Message Object to handle Command in.
  	* @example commandhandler.run(client, message);
  	*/
-	handle(client, message) {
+	async handle(client, message) {
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
 		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
@@ -147,21 +153,7 @@ class CommandHandler {
 				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
 			}
 			if(client.cooldowns) {
-				const cooldowns = client.cooldowns.get(message.author.id) || {};
-				const now = Date.now();
-				const cooldownAmount = ms(cmd.help.cooldown || '5s');
-				const cooldownName = cmd.help.cooldownGroup || cmd.help.name;
-				if (!cooldowns[cooldownName]) cooldowns[cooldownName] = now - cooldownAmount;
-				const cooldown = cooldowns[cooldownName];
-				const expirationTime = cooldown + cooldownAmount;
-				if (now < expirationTime) {
-					const timeLeft = ms(expirationTime - now, {
-						long: true,
-					});
-					return message.reply(`Please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`), message.channel.stopTyping(true);
-				}
-				cooldowns[cooldownName] = now;
-				client.cooldowns.set(message.author.id, cooldowns);
+				if(await checkForCooldown(client, cmd, message, this.settings)) return;
 			}
 			if(!cmd.help.used) cmd.help.used = 0;
 			cmd.help.used += 1;
@@ -190,4 +182,40 @@ function loadBaseCMD(client, cmd, settings) {
 		console.log(`Loaded Default Command: ${cmd}`); // => log that command got loaded
 		client.commands.set(props.help.name, props); // => add command to command list
 	}
+}
+/**
+ * Function to check for Cooldowns.
+ *
+ * @private
+ * @param {Client} client - Discord.JS Client.
+ * @param {Object} cmd - Command.
+ * @param {Message} message - Message.
+ * @param {HandlerSettings} settings - Settings Object.
+ */
+async function checkForCooldown(client, cmd, message, settings) {
+	const cooldowns = client.cooldowns.get(message.author.id) || {};
+	const now = Date.now();
+	const cooldownAmount = ms(cmd.help.cooldown || settings.defaultCooldown);
+	const cooldownName = cmd.help.cooldownGroup || cmd.help.name;
+	if (!cooldowns[cooldownName]) cooldowns[cooldownName] = now - cooldownAmount;
+	const cooldown = cooldowns[cooldownName];
+	const expirationTime = cooldown + cooldownAmount;
+	if (now < expirationTime) {
+		const msLeft = expirationTime - now;
+		const timeLeft = ms(msLeft, {
+			long: true,
+		});
+		if(msLeft > settings.maxWait) {
+			message.reply(`Please wait \`${timeLeft}\` before reusing the \`${cmd.help.name}\` command.`);
+			message.channel.stopTyping(true);
+			return true;
+		}
+		else {
+			await sleep(msLeft);
+			return await checkForCooldown(client, cmd, message, settings);
+		}
+	}
+	cooldowns[cooldownName] = now;
+	client.cooldowns.set(message.author.id, cooldowns);
+	return false;
 }
