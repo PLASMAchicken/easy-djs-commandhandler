@@ -7,7 +7,7 @@ class Command {
 	 * @property {string} name
 	 * @property {string} [description]
 	 * @property {Boolean} [hideinhelp=false]
-	 * @property {('botowner'|'guild'|'dm')[]} [require=[]]
+	 * @property {('botowner'|'guild'|'dm')[]} [requires=[]]
 	 * @property {string} [usage]
 	 * @property {Array<string>} [aliases=[]]
 	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions=[]]
