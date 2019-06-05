@@ -1,3 +1,6 @@
+# If you are using discord.js v12 / master:
+`npm i PLASMAchicken/easy-djs-commandhandler`
+
 # Module to make an fast setup Discord Bot, simply do:
 
 ```js
