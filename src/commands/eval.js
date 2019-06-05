@@ -1,42 +1,37 @@
-/* eslint no-unused-vars: 0  */
 const Discord = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const discord = Discord;
 
 const cblockre = /(^```js)|(```$)/g;
+const { Command } = require('easy-djs-commandhandler');
+module.exports = new Command({ name: 'eval', aliases: ['e'], requires: ['botowner'], cooldown: '1ms', hideinhelp: true, description: 'Evals Code', usage: '<prefix>e code' })
+	.execute(async (client, message, args) => {
+		try {
+			let content = args.join(' ');
+			if (cblockre.test(content)) {
+				content = content.replace(cblockre, '').trim();
+			}
 
-const { Client, Message } = require('discord.js');
-/**
- * @param {Client} client - Discord.js Client.
- * @param {Message} message - Discord.js Message.
- * @param {Array} args - Array with parsed args.
- */
-module.exports.run = async (client, message, args) => {
-	try {
-		let content = args.join(' ');
-		if (cblockre.test(content)) {
-			content = content.replace(cblockre, '').trim();
+			let evaled = await eval(content);
+
+			if (typeof evaled !== 'string') {evaled = require('util').inspect(evaled);}
+			header(message);
+			console.log(evaled);
+			if(evaled.length < 5000) await message.channel.send(evaled, { split: { char: '\n' }, code: 'js' });
+			else message.channel.send('Evaled Result is too big, please see console!');
+			header(message);
 		}
-		let evaled = eval(content);
+		catch (err) {
+			return message.channel.send(`\`ERROR\` \`\`\`xl\n${err}\n\`\`\``);
+		}
+	});
 
-		if (typeof evaled !== 'string') {evaled = require('util').inspect(evaled);}
 
-
-		const wrapped = `${message.author}\n\`\`\`js\n${evaled.length > 1800 ? evaled.slice(0, 1800) + '\n...' : evaled}\n\`\`\``;
-		await message.channel.send(wrapped);
-		console.log(evaled);
-	}
-	catch (err) {
-		message.channel.send(`\`ERROR\` \`\`\`xl\n${err}\n\`\`\``);
+const header = (m, x) => {
+	const H = `========== ${m.id} ==========`;
+	console.log(H);
+	if (x) {
+		console.log(x);
+		console.log(H);
 	}
 };
-
-
-module.exports.help = {
-	name: 'eval',
-	description: 'evals code',
-	hideinhelp: true,
-	aliases: ['e'],
-	requires: ['botowner'],
-	cooldown: '1ms',
-	category: 'default',
-};
-
