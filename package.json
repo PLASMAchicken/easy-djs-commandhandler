@@ -1,6 +1,6 @@
 {
   "name": "easy-djs-commandhandler",
-  "version": "2.3.0",
+  "version": "3.0.0-dev",
   "description": "Package to create an easy discord bot",
   "main": "./src/index",
   "scripts": {
@@ -21,7 +21,7 @@
     "eslint-plugin-jsdoc": "^4.8.4"
   },
   "dependencies": {
-    "discord.js": "^11.5.0",
+    "discord.js": "github:discordjs/discord.js",
     "ms": "^2.1.1"
   }
 }
