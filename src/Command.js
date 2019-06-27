@@ -41,6 +41,7 @@ class Command {
 		this.help.cooldown = cooldown;
 		this.help.aliases = aliases;
 		this.help.requiresBotPermissions = requiresBotPermissions;
+		this.help.requireUserPermissions=requireUserPermissions;
 		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
 		return this;
 	}
