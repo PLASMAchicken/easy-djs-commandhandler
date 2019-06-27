@@ -153,6 +153,14 @@ class CommandHandler {
 				}
 				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
 			}
+			if(cmd.help.requireUserPermissions && cmd.help.requireUserPermissions.length) {
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requireUserPermissions.filter(permission => !message.channel.permissionsFor(message.member).has(permission));
+				}
+				
+				if(missing.length)return message.reply(`You are missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
+			}
 			if(client.cooldowns) {
 				if(await checkForCooldown(client, cmd, message, this.settings)) return;
 			}

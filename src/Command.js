@@ -12,6 +12,7 @@ class Command {
 	 * @property {string} [cooldown] - The Cooldown Overwrite.
 	 * @property {Array<string>} [aliases] - The Aliases, used for <prefix><command.alias>.
 	 * @property {discord.PermissionResolvable[]} [requiresBotPermissions] - Permissions that the bot needs.
+	 * @property {discord.PermissionResolvable[]} [requireUserPermissions] - permissions that the user needs to have to execute the command.
 	 */
 	/**
 	 *
@@ -26,6 +27,7 @@ class Command {
 		cooldown,
 		aliases = [],
 		requiresBotPermissions = [],
+		requireUserPermissions=[],
 	}) {
 		if (!name) {
 			throw new Error('name required for Command Class');
