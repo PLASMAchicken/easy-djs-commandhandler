@@ -165,9 +165,10 @@ class CommandHandler {
 	}
 }
 const Command = require('./Command');
+const Argument=require('./Argument')
 module.exports.Command = Command;
 module.exports.Handler = CommandHandler;
-
+module.exports.ArgumentCollector=Argument
 /**
  * Function to load Base Commmands that come with the Package.
  *
