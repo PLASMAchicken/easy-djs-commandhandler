@@ -134,5 +134,4 @@ class Collector {
 		return { values, canceled: false };
 	}
 }
-exports.Argument = Argument;
-exports.Collector = Collector;
+module.exports = Collector;
