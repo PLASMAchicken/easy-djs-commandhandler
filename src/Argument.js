@@ -67,7 +67,7 @@ class Argument {
 			}
 			if (!value) {
 				await message.channel.send(
-					this.errorMsg || 'it seems that is not the correct answer'
+					this.errorMsg || 'It seems, that this is not the correct answer!'
 				);
 				if (this.attempts && this.usedAttempts < this.attempts) {
 					this.usedAttempts++;
@@ -98,7 +98,7 @@ class Collector {
 	 */
 	/**
 	 *
-	 * @param {ArgumentInfo[]} args - Arguemts.
+	 * @param {ArgumentInfo[]} args - Arguments.
 	 */
 	constructor(args = [{}]) {
 		/**
