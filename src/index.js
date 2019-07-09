@@ -141,6 +141,7 @@ class CommandHandler {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guildowner') && message.author.id !== message.guild.owner.id) return message.channel.send('This command can only be run by the guild owner!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild Owner! `), message.channel.stopTyping(true);
 			}
 			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length) {
 				let missing = ['ERROR'];
@@ -151,6 +152,16 @@ class CommandHandler {
 					missing = cmd.help.requiresBotPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
 				}
 				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
+			}
+			if(cmd.help.requireUserPermissions && cmd.help.requireUserPermissions.length) {
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requireUserPermissions.filter(permission => !message.channel.permissionsFor(message.member).has(permission));
+				}
+				else {
+					missing = cmd.help.requireUserPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
+				}
+				if(missing.length)return message.reply(`You are missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
 			}
 			if(client.cooldowns) {
 				if(await checkForCooldown(client, cmd, message, this.settings)) return;
@@ -164,9 +175,10 @@ class CommandHandler {
 	}
 }
 const Command = require('./Command');
+const Argument = require('./Argument');
 module.exports.Command = Command;
 module.exports.Handler = CommandHandler;
-
+module.exports.ArgumentCollector = Argument;
 /**
  * Function to load Base Commmands that come with the Package.
  *
