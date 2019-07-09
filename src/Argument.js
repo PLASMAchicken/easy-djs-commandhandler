@@ -34,24 +34,27 @@ class Argument {
 		if (collector && collector.size) {
 			if (this.type == 'channel') {
 				value =
-					collector.first().mentions.channels.first() ||
-					collector
-						.first()
-						.guild.channels.get(collector.first().content);
+					collector.first().mentions.channels.first() || collector
+						.first().guild ?
+						collector
+							.first()
+							.guild.channels.get(collector.first().content) : undefined;
 			}
 			else if (this.type == 'member') {
 				value =
-					collector.first().mentions.members.first() ||
-					collector
-						.first()
-						.guild.members.get(collector.first().content);
+					collector.first().mentions.members.first() || collector
+						.first().guild ?
+						collector
+							.first()
+							.guild.members.get(collector.first().content) : undefined;
 			}
 			else if (this.type == 'role') {
 				value =
-					collector.first().mentions.roles.first() ||
-					collector
-						.first()
-						.guild.roles.get(collector.first().content);
+					collector.first().mentions.roles.first() || collector
+						.first().guild ?
+						collector
+							.first()
+							.guild.roles.get(collector.first().content) : undefined;
 			}
 			else if (this.type == 'string') {
 				value = collector.first().content;
