@@ -6,8 +6,8 @@ class Command {
 	 *
 	 * @property {string} name - The Command name, used for <prefix><command.name>.
 	 * @property {string} [description] - The Command Description, for the help command.
-	 * @property {Boolean} [hideinhelp] - Should the Command be hidden for normal users in help?
-	 * @property {('botowner'|'guild'|'dm'|'guildowner')[]} [requires] - Does the Command require a guild/dm or botowner?
+	 * @property {Boolean} [hideinhelp=false] - Should the Command be hidden for normal users in help?
+	 * @property {('botowner'|'guild'|'dm'|'guildowner')[]} [requires=[]] - Does the Command require a guild/dm or botowner?
 	 * @property {string} [usage] - The Command Usage, for the help command.
 	 * @property {string} [cooldown] - The Cooldown Overwrite.
 	 * @property {Array<string>} [aliases] - The Aliases, used for <prefix><command.alias>.
