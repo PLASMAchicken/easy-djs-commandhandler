@@ -158,7 +158,7 @@ class CommandHandler {
 				if(message.guild) {
 					missing = cmd.help.requireUserPermissions.filter(permission => !message.channel.permissionsFor(message.member).has(permission));
 				}
-				
+
 				if(missing.length)return message.reply(`You are missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
 			}
 			if(client.cooldowns) {
@@ -173,10 +173,10 @@ class CommandHandler {
 	}
 }
 const Command = require('./Command');
-const Argument=require('./Argument')
+const Argument = require('./Argument');
 module.exports.Command = Command;
 module.exports.Handler = CommandHandler;
-module.exports.ArgumentCollector=Argument
+module.exports.ArgumentCollector = Argument;
 /**
  * Function to load Base Commmands that come with the Package.
  *

@@ -27,7 +27,7 @@ class Command {
 		cooldown,
 		aliases = [],
 		requiresBotPermissions = [],
-		requireUserPermissions=[],
+		requireUserPermissions = [],
 	}) {
 		if (!name) {
 			throw new Error('name required for Command Class');
@@ -41,7 +41,7 @@ class Command {
 		this.help.cooldown = cooldown;
 		this.help.aliases = aliases;
 		this.help.requiresBotPermissions = requiresBotPermissions;
-		this.help.requireUserPermissions=requireUserPermissions;
+		this.help.requireUserPermissions = requireUserPermissions;
 		this.run = (client, message) => { message.channel.send('This Command does not have a Function!'); };
 		return this;
 	}

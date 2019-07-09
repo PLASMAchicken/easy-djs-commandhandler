@@ -6,7 +6,7 @@ class Argument {
 	 */
 	/**
 	 *
-	 * @param {ArgumentInfo} info
+	 * @param {ArgumentInfo} info - Argument Info Options.
 	 */
 	constructor(info = {}) {
 		this.usedAttempts = 0;
@@ -19,7 +19,7 @@ class Argument {
 		this.errorMsg = info.errorMsg;
 	}
 	/**
-	 * @param {discord.Message} message
+	 * @param {discord.Message} message - Discordjs message.
 	 * @returns {{canceled:boolean,value:discord.Channel|discord.User|discord.GuildMember|discord.Message|string|discord.Role}}
 	 */
 	async obtain(message) {
@@ -96,7 +96,7 @@ class Collector {
 	 */
 	/**
 	 *
-	 * @param {ArgumentInfo[]} args
+	 * @param {ArgumentInfo[]} args - Arguemts.
 	 */
 	constructor(args = [{}]) {
 		/**
@@ -111,7 +111,7 @@ class Collector {
 	}
 	/**
 	 *
-	 * @param {discord.Message} message
+	 * @param {discord.Message} message - Discord.js Message.
 	 * @returns
 	 */
 	async obtain(message) {
