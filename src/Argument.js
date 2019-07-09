@@ -23,6 +23,8 @@ class Argument {
 	 * @returns {{canceled:boolean,value:discord.Channel|discord.User|discord.GuildMember|discord.Message|string|discord.Role}}
 	 */
 	async obtain(message) {
+		if(!this.key) throw new Error('Argument is missing key!');
+		if(!this.prompt) throw new Error('Argument is missing prompt!');
 		let value;
 		await message.channel.send(this.prompt);
 		const collector = await message.channel.awaitMessages(
