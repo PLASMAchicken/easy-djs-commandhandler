@@ -61,6 +61,18 @@ module.exports = new Command({
 });
 ```
 
+# Using ArgumentsCollector
+```js
+const { Command, ArgumentCollector } = require('easy-djs-commandhandler');
+module.exports = new Command({ name: 'collect' }).execute(async (client, message, args) => {
+	const collector = new ArgumentCollector([{ prompt: 'What did you eat today?', key: 'food_today' }, { prompt: 'What channel is this?', key: 'test_channel', attempts:3, errorMsg: 'Something went wrong!', type: 'channel', time: 5999 }]);
+	const collected = await collector.obtain(message);
+	console.log(collected);// retruns { values: { food_today: message_object, test_channel: channel_object }, canceled: false };
+	console.log(collected.values.food_today.content);	// if no type specified, returns collected message object, example: get content of collected message
+	console.log(collected.values.test_channel.name);	// type: 'channel', returns channel object, example: get name of the channel
+});
+```
+
 # Using Custom/Presistant Cooldowns
 
 ```js
