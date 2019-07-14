@@ -81,7 +81,7 @@ class CommandHandler {
 					const props = require(`${process.cwd()}/${settings.folder}/${f}`); // => load each one
 
 					console.log(`${i} ${f} loaded!`); // => log that command got loaded
-					if(props.help.aliases && !Array.isArray(props.help.aliases) )  props.help.aliases = [props.help.aliases];
+					if(props.help.aliases && !Array.isArray(props.help.aliases)) props.help.aliases = [props.help.aliases];
 					client.commands.set(props.help.name, props); // => add command to command list
 				}
 				catch(err) {
@@ -99,7 +99,7 @@ class CommandHandler {
 
 						console.log(`${i} ${f} in category ${category} loaded!`); // => log that command got loaded
 						props.help.category = category;
-						if(props.help.aliases && !Array.isArray(props.help.aliases) )  props.help.aliases = [props.help.aliases];
+						if(props.help.aliases && !Array.isArray(props.help.aliases)) props.help.aliases = [props.help.aliases];
 						client.commands.set(props.help.name, props); // => add command to command list
 					}
 					catch(err) {
