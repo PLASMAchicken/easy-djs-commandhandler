@@ -4,7 +4,7 @@ const discord = Discord;
 
 const cblockre = /(^```js)|(```$)/g;
 const { Command } = require('easy-djs-commandhandler');
-module.exports = new Command({ name: 'eval', aliases: ['e'], requires: ['botowner'], cooldown: '1ms', hideinhelp: true, description: 'Evals Code', usage: '<prefix>e code' })
+module.exports = new Command({ name: 'eval', aliases: ['ev'], requires: ['botowner'], cooldown: '1ms', hideinhelp: true, description: 'Evals Code', usage: '<prefix>eval code' })
 	.execute(async (client, message, args) => {
 		try {
 			let content = args.join(' ');
