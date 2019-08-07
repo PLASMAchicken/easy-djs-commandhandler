@@ -76,13 +76,15 @@ module.exports = new Command({ name: 'collect' }).execute(async (client, message
 # Using Custom Prefixes
 
 ```js
-const handle = new commandHandler.Handler(client, {prefixFunc, owner: ['193406800614129664']});
-function prefixFunc(message, client){
-	// have something wich gets the specific prefix for that guild/user and return it;
-	// eg. return guildsettings.get(message.guild.id).prefix;
-	if(message.guild && message.guild.id == '193406800614129664') return 'B';	// The Prefix for this Guild will be B
-	else return 'C';															// The Prefix for all other Guilds will be C
-}
+const handle = new commandHandler.Handler(client, {
+	owner: ['193406800614129664'],
+	prefixFunc : (message, client) => {
+		// have something wich gets the specific prefix for that guild/user and return it;
+		// eg. return guildsettings.get(message.guild.id).prefix;
+		if(message.guild && message.guild.id == '193406800614129664') return 'B';	// The Prefix for this Guild will be B
+		else return 'C';															// The Prefix for all other Guilds will be C
+	},
+});
 ```
 
 

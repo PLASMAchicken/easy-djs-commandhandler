@@ -3,6 +3,15 @@ const { Message, Client, Collection } = require('discord.js');
 const ms = require('ms');
 const sleep = require('util').promisify(setTimeout);
 class CommandHandler {
+
+	/**
+	* Callback for adding two numbers.
+	*
+	* @callback prefixFunc
+	* @param {Message} message - The Message we need the prefix for.
+	* @param {Client} client - The Client
+	* @returns {Strings} - The prefix that will be used.
+	*/
 	/**
  	* Options for the Coammnd Handler.
  	* @typedef {Object} HandlerSettings
@@ -14,9 +23,8 @@ class CommandHandler {
 	* @property {boolean} [defaultcmds=true] - Load Default Commands.
 	* @property {string} [maxWait='2s'] - Max Time to wait for Cooldown.
 	* @property {string} [defaultCooldown='5s'] - Default Cooldown if Command does not overwrite it.
-	* @property {Function} [prefixFunc] - Function wich returns a string and selects the prefix.
- 	*/
-
+	* @property {prefixFunc} [prefixFunc] - Function wich returns a string and selects the prefix.
+	 */
 	/**
 	* Module to run and handle Commands.
 	*
