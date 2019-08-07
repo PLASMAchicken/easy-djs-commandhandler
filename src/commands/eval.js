@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const discord = Discord;
 
 const cblockre = /(^```js)|(```$)/g;
-const { Command } = require('easy-djs-commandhandler');
+const { Command } = require('../');
 module.exports = new Command({ name: 'eval', aliases: ['ev'], requires: ['botowner'], cooldown: '1ms', hideinhelp: true, description: 'Evals Code', usage: '<prefix>eval code' })
 	.execute(async (client, message, args) => {
 		try {
