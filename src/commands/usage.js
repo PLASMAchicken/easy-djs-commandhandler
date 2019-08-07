@@ -14,7 +14,7 @@ module.exports.help = {
 	name: 'usage',
 	description: 'shows your bot usage',
 	hideinhelp: true,
-	aliases: ['e'],
+	aliases: [],
 	requires: ['botowner'],
 	cooldown: '1ms',
 	category: 'default',
