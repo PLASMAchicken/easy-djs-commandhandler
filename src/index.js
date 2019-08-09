@@ -14,6 +14,7 @@ class CommandHandler {
 	* @property {boolean} [defaultcmds=true] - Load Default Commands.
 	* @property {string} [maxWait='2s'] - Max Time to wait for Cooldown.
 	* @property {string} [defaultCooldown='5s'] - Default Cooldown if Command does not overwrite it.
+	* @property {(message:Message,client:Client)=>string} [prefixFunc] - Function wich returns a string and selects the prefix.
  	*/
 
 	/**
@@ -128,7 +129,14 @@ class CommandHandler {
 	async handle(client, message) {
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
-		const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+		let prefixRegex;
+		if(this.settings.prefixFunc) {
+			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${(this.settings.prefixFunc(message, client) || client.prefix).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+		}
+		else	{
+			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+
+		}
 		if (!prefixRegex.test(message.content)) return;
 		const [, matchedPrefix] = message.content.match(prefixRegex);
 		const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
