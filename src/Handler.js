@@ -141,7 +141,7 @@ class CommandHandler {
 		if (message.system || message.author.bot) return;
 		let prefixRegex;
 		if(this.settings.prefixFunc) {
-			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${(this.settings.prefixFunc(message, client) || client.prefix).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${(await this.settings.prefixFunc(message, client) || client.prefix).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
 		}
 		else	{
 			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
