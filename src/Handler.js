@@ -24,6 +24,7 @@ class CommandHandler {
 	* @property {string} [maxWait='2s'] - Max Time to wait for Cooldown.
 	* @property {string} [defaultCooldown='5s'] - Default Cooldown if Command does not overwrite it.
 	* @property {prefixFunc} [prefixFunc] - Function wich returns a string and selects the prefix.
+	* @property {boolean} [logArgs] - Log arguments passed to each command
 	 */
 	/**
 	* Module to run and handle Commands.
@@ -47,6 +48,8 @@ class CommandHandler {
 			client.cooldowns = settings.cooldowns;
 		}
 		else {client.cooldowns = settings.cooldowns;}
+
+		if(settings.logArgs==undefined)settings.logArgs=false;
 
 		if(settings.defaultcmds !== false) settings.defaultcmds = true;
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
@@ -154,7 +157,8 @@ class CommandHandler {
 		const cmd = client.commands.get(cmdname) || client.commands.find(com => com.help.aliases && com.help.aliases.includes(cmdname));
 		if (cmd) {
 			message.channel.startTyping();
-			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
+			let logArgs=this.settings.logArgs?' [\''+args.join("','")+'\']':'';
+			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name}${logArgs} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
