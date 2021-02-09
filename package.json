@@ -21,7 +21,7 @@
     "eslint-plugin-jsdoc": "^4.8.4"
   },
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^12.5.1",
     "ms": "^2.1.1"
   }
 }
