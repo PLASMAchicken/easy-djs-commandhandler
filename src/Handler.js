@@ -159,7 +159,7 @@ class CommandHandler {
 			message.channel.startTyping();
       
 			let logArgs=this.settings.logArgs?' [\''+args.join("','")+'\']':'';
-			console.log(`[Ping:${Math.round(client.ping)}ms] ${cmd.help.name}${logArgs} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
+			console.log(`[Ping:${Math.round(client.ws.ping)}ms] ${cmd.help.name}${logArgs} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
 
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]`: ''} ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
