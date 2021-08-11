@@ -1,5 +1,5 @@
 const ms = require('ms');
-const { Client, Message } = require('discord.js');
+const { Client, Message, Util } = require('discord.js');
 /**
  * @param {Client} client - Discord.js Client.
  * @param {Message} message - Discord.js Message.
@@ -10,17 +10,25 @@ module.exports.run = async (client, message, args) => {
 		let commands = {};
 		if (client.owners.includes(message.author.id)) commands = client.commands;
 		else commands = client.commands.filter(cmd => !cmd.help.hideinhelp);
-		const commandList = commands.map(props => `${props.help.hideinhelp ? '__' : ''}**Command: ${props.help.name}**${props.help.hideinhelp ? '\t __--hidden-- ( only visible to you because you are owner ) ' : ''}\n${props.help.category ? `\tCategory: ${props.help.category}\n` : '' }${props.help.description ? `\tDescription: ${props.help.description}\n` : '' }${props.help.usage ? `\tUsage: ${client.format(props.help.usage)}\n` : '' }${props.help.aliases ? (props.help.aliases.length ? `\tAliases: [ ${props.help.aliases.join(', ')} ]\n` : '') : '' }`).filter(data => data !== '');
+		const commandList = commands.map(props => `${props.help.hideinhelp ? '__' : ''}**Command: ${props.help.name}**${props.help.hideinhelp ? '\t __--hidden-- ( only visible to you because you are owner ) ' : ''}\n${props.help.category ? `\tCategory: ${props.help.category}\n` : '' }${props.help.description ? `\tDescription: ${props.help.description}\n` : '' }${props.help.usage ? `\tUsage: ${client.format(props.help.usage)}\n` : '' }${props.help.aliases ? (props.help.aliases.length ? `\tAliases: [ ${props.help.aliases.join(', ')} ]\n` : '') : '' }`).filter(data => data !== '').join('\n');
+		const split = Util.splitMessage(commandList);
+		const first = split.shift();
 
-		return message.author.send(commandList, { split: { char: '\n\n' } })
+
+		message.author.send({ content: first })
 			.then(() => {
 				if (message.channel.type === 'dm') return;
 				message.reply('I\'ve sent you a DM with all my commands!');
+				if(split.length > 0) {
+					split.forEach(x => message.author.send({ content: x }));
+				}
 			})
 			.catch(error => {
-				message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
+				message.reply('It seems like I can\'t DM you! Do you have DMs disabled?');
 				if(error.code != 50007) throw new Error(`Could not send help DM to ${message.author.tag}.\n` + error);
 			});
+
+		return;
 	}
 	const cmd = args.join(' ').toLowerCase();
 	const command = client.commands.get(cmd) || client.commands.find(commanda => commanda.help.aliases && commanda.help.aliases.includes(cmd));

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Message, Client, Collection } = require('discord.js');
+const { Message, Client, Collection, Interaction, SnowflakeUtil, CommandInteraction } = require('discord.js');
 const ms = require('ms');
 const sleep = require('util').promisify(setTimeout);
 class CommandHandler {
@@ -49,7 +49,7 @@ class CommandHandler {
 		}
 		else {client.cooldowns = settings.cooldowns;}
 
-		if(settings.logArgs==undefined)settings.logArgs=false;
+		if(settings.logArgs == undefined)settings.logArgs = false;
 
 		if(settings.defaultcmds !== false) settings.defaultcmds = true;
 		if(settings.owners && !settings.owner) settings.owner = settings.owners;
@@ -129,6 +129,51 @@ class CommandHandler {
 			loadBaseCMD(client, 'usage', this.settings);
 
 			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
+
+
+			const { SlashCommandBuilder } = require('@discordjs/builders');
+
+			const commands = client.commands.map(x => {
+				const data = new SlashCommandBuilder()
+					.setName(x.help.name)
+					.setDescription(x.help.description)
+
+					.addStringOption(option =>
+						option.setName('input')
+							.setDescription('placeholder')
+							.setRequired(false));
+				if(x.help && x.help.hideinhelp) {
+					data.defaultPermission = false;
+
+					data.permissions = [{
+						id: '692887270491160597',
+						type: 'ROLE',
+						permission: true,
+					}];
+				}
+				return data;
+
+
+			});
+			client.guilds.cache.get('471361190732365824').commands.set(commands).then(cmds=> {
+
+				client.guilds.cache.get('471361190732365824').commands.cache.forEach(cmd => {
+					console.log(cmd.name);
+					const command = client.commands.get(cmd.name);
+					if(command.help && command.help.hideinhelp) {
+
+
+						const permissions = [{
+							id: '692887270491160597',
+							type: 'ROLE',
+							permission: true,
+						}];
+
+
+						cmd.permissions.set({ permissions });
+					}
+				});
+			});
 		}); // => close commandhandler and start client
 	}
 
@@ -136,10 +181,25 @@ class CommandHandler {
  	* Module to run and handle Commands.
  	*
  	* @param {Client} client - Discord Client.
- 	* @param {Message} message - Message Object to handle Command in.
+ 	* @param {CommandInteraction} interaction - Interagtion Object to handle Command in.
  	* @example commandhandler.run(client, message);
  	*/
-	async handle(client, message) {
+	async handle(client, interaction) {
+		const content = this.settings.prefix + interaction.commandName + ' ' + (interaction.options.getString('input') ? interaction.options.getString('input') : '');
+
+		const message = new Message(client, {
+			channel_id: interaction.channelId,
+			id: SnowflakeUtil.generate(),
+			guild_id: interaction.guildId,
+			member: interaction.member.toJSON(),
+			author: interaction.user,
+			content: content,
+		}, client.channels.cache.get(interaction.channelId));
+		console.log(message.content);
+		console.log(message.mentions);
+
+		interaction.reply({ content: 'Simulating command:\n' + content });
+
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
 		let prefixRegex;
@@ -155,17 +215,40 @@ class CommandHandler {
 		const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
 		const cmdname = args.shift().toLowerCase();
 		const cmd = client.commands.get(cmdname) || client.commands.find(com => com.help.aliases && com.help.aliases.includes(cmdname));
+
+		function getUserFromMention(mention) {
+			if (!mention) return;
+
+			if (mention.startsWith('<@') && mention.endsWith('>')) {
+				mention = mention.slice(2, -1);
+
+				if (mention.startsWith('!')) {
+					mention = mention.slice(1);
+				}
+
+				return client.users.cache.get(mention);
+			}
+		}
+		message.mentions.users = new Collection();
+		args.forEach(arg => {
+			const data = getUserFromMention(arg);
+			if(data) {
+				message.mentions.users.set(data.id, data);
+			}
+		});
+
+
 		if (cmd) {
-			message.channel.startTyping();
-      
-			let logArgs=this.settings.logArgs?' [\''+args.join("','")+'\']':'';
+			message.channel.sendTyping();
+
+			const logArgs = this.settings.logArgs ? ' [\'' + args.join('\',\'') + '\']' : '';
 			console.log(`[Ping:${Math.round(client.ws.ping)}ms] ${cmd.help.name}${logArgs} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
 
 			if (cmd.help.requires) {
-				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]`: ''} ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
-				if (cmd.help.requires.includes('guild') && message.channel.type !== 'text') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]`: ''} ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
-				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]`: ''} ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
-				if (cmd.help.requires.includes('guildowner') && message.author.id !== message.guild.owner.id) return message.channel.send('This command can only be run by the guild owner!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]`: ''} ${cmd.help.name} failed!: Not Guild Owner! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guild') && message.channel.type !== 'GUILD_TEXT') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guildowner') && message.author.id !== message.guild.owner.id) return message.channel.send('This command can only be run by the guild owner!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild Owner! `), message.channel.stopTyping(true);
 			}
 			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length) {
 				let missing = ['ERROR'];
@@ -194,7 +277,6 @@ class CommandHandler {
 			cmd.help.used += 1;
 			cmd.run(client, message, args);
 			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
-			message.channel.stopTyping(true);
 		}
 	}
 }
