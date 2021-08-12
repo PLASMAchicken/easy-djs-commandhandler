@@ -131,7 +131,7 @@ class CommandHandler {
 
 			console.log(`${client.commands.size} Commands loaded! ${errorc == 0 ? '' : `${errorc} Error occured!` }`);
 
-
+		/*
 			const { SlashCommandBuilder } = require('@discordjs/builders');
 
 			const commands = client.commands.map(x => {
@@ -174,7 +174,7 @@ class CommandHandler {
 						cmd.permissions.set({ permissions });
 					}
 				});
-			});
+			});*/
 		}); // => close commandhandler and start client
 	}
 
