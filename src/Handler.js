@@ -186,7 +186,7 @@ class CommandHandler {
  	* @example commandhandler.run(client, message);
  	*/
 	async handleInteraction(client, interaction) {
-		const content = this.settings.prefix + interaction.commandName + ' ' + (interaction.options.getString('input') ? interaction.options.getString('input') : '');
+		const content = client.prefix + interaction.commandName + ' ' + (interaction.options.getString('input') ? interaction.options.getString('input') : '');
 
 		const message = new Message(client, {
 			channel_id: interaction.channelId,
