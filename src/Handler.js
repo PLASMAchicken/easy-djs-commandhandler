@@ -9,22 +9,23 @@ class CommandHandler {
 	*
 	* @callback prefixFunc
 	* @param {Message} message - The Message we need the prefix for.
-	* @param {Client} client - The Client
+	* @param {Client} client - The Client.
 	* @returns {Strings} - The prefix that will be used.
 	*/
 	/**
  	* Options for the Coammnd Handler.
- 	* @typedef {Object} HandlerSettings
+	 *
+ 	* @typedef {object} HandlerSettings
 	*
 	* @property {string} [prefix=!] Prefix.
  	* @property {Array} [owner=[]] Array of ids with Bot Perms.
 	* @property {string} [folder=commands] Folder where the Commands are in.
-	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection
+	* @property {*} [cooldowns=true] - If Cooldowns are Enabled, either true/false, or Collection.
 	* @property {boolean} [defaultcmds=true] - Load Default Commands.
 	* @property {string} [maxWait='2s'] - Max Time to wait for Cooldown.
 	* @property {string} [defaultCooldown='5s'] - Default Cooldown if Command does not overwrite it.
 	* @property {prefixFunc} [prefixFunc] - Function wich returns a string and selects the prefix.
-	* @property {boolean} [logArgs] - Log arguments passed to each command
+	* @property {boolean} [logArgs] - Log arguments passed to each command.
 	 */
 	/**
 	* Module to run and handle Commands.
@@ -184,7 +185,7 @@ class CommandHandler {
  	* @param {CommandInteraction} interaction - Interagtion Object to handle Command in.
  	* @example commandhandler.run(client, message);
  	*/
-	async handle(client, interaction) {
+	async handleInteraction(client, interaction) {
 		const content = this.settings.prefix + interaction.commandName + ' ' + (interaction.options.getString('input') ? interaction.options.getString('input') : '');
 
 		const message = new Message(client, {
@@ -279,6 +280,71 @@ class CommandHandler {
 			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
 		}
 	}
+
+	/**
+ 	* Module to run and handle Commands.
+ 	*
+ 	* @param {Client} client - Discord Client.
+ 	* @param {Message} message - Message Object to handle Command in.
+ 	* @example commandhandler.run(client, message);
+ 	*/
+	async handleMessage(client, message) {
+		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
+		if (message.system || message.author.bot) return;
+		let prefixRegex;
+		if(this.settings.prefixFunc) {
+			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${(await this.settings.prefixFunc(message, client) || client.prefix).replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+		}
+		else	{
+			prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${client.prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})\\s*`);
+		}
+
+		if (!prefixRegex.test(message.content)) return;
+		const [, matchedPrefix] = message.content.match(prefixRegex);
+		const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
+		const cmdname = args.shift().toLowerCase();
+		const cmd = client.commands.get(cmdname) || client.commands.find(com => com.help.aliases && com.help.aliases.includes(cmdname));
+		if (cmd) {
+			message.channel.sendTyping();
+
+			const logArgs = this.settings.logArgs ? ' [\'' + args.join('\',\'') + '\']' : '';
+			console.log(`[Ping:${Math.round(client.ws.ping)}ms] ${cmd.help.name}${logArgs} request by ${message.author.username} @ ${message.author.id} `); // if command can run => log action
+
+			if (cmd.help.requires) {
+				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guild') && message.channel.type !== 'GUILD_TEXT') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guildowner') && message.author.id !== message.guild.owner.id) return message.channel.send('This command can only be run by the guild owner!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild Owner! `), message.channel.stopTyping(true);
+			}
+			if(cmd.help.requiresBotPermissions && cmd.help.requiresBotPermissions.length) {
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requiresBotPermissions.filter(permission => !message.channel.permissionsFor(message.guild.me).has(permission));
+				}
+				else {
+					missing = cmd.help.requiresBotPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
+				}
+				if(missing.length)return message.reply(`I am missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
+			}
+			if(cmd.help.requireUserPermissions && cmd.help.requireUserPermissions.length) {
+				let missing = ['ERROR'];
+				if(message.guild) {
+					missing = cmd.help.requireUserPermissions.filter(permission => !message.channel.permissionsFor(message.member).has(permission));
+				}
+				else {
+					missing = cmd.help.requireUserPermissions.filter(permission => !['VIEW_CHANNEL', 'SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS ', 'ATTACH_FILES'].includes(permission));
+				}
+				if(missing.length)return message.reply(`You are missing the following Permissions to execute this Command: ${missing.map(x => `\`${x}\``).join(', ')}`), message.channel.stopTyping(true);
+			}
+			if(client.cooldowns) {
+				if(await checkForCooldown(client, cmd, message, this.settings)) return;
+			}
+			if(!cmd.help.used) cmd.help.used = 0;
+			cmd.help.used += 1;
+			cmd.run(client, message, args);
+			if (cmd.help.category === 'indevelopment' && !client.owners.includes(message.author.id)) message.reply('Just a quick sidenote:\nThis Command is still indevelopment and might be unstable or even broken!');
+		}
+	}
 }
 /**
  * Function to load Base Commmands that come with the Package.
@@ -301,7 +367,7 @@ function loadBaseCMD(client, cmd, settings) {
  *
  * @private
  * @param {Client} client - Discord.JS Client.
- * @param {Object} cmd - Command.
+ * @param {object} cmd - Command.
  * @param {Message} message - Message.
  * @param {HandlerSettings} settings - Settings Object.
  */
