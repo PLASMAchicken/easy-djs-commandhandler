@@ -247,7 +247,7 @@ class CommandHandler {
 
 			if (cmd.help.requires) {
 				if (cmd.help.requires.includes('botowner')) if (!client.owners.includes(message.author.id)) return message.reply('This command cannot be used by you!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Bot Owner! `), message.channel.stopTyping(true);
-				if (cmd.help.requires.includes('guild') && message.channel.type !== 'GUILD_TEXT') return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
+				if (cmd.help.requires.includes('guild') && !message.guild.id) return message.channel.send('This command needs to be run in a guild!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('dm') && message.channel.type !== 'dm') return message.channel.send('This command needs to be run in DMs!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not DM! `), message.channel.stopTyping(true);
 				if (cmd.help.requires.includes('guildowner') && message.author.id !== message.guild.owner.id) return message.channel.send('This command can only be run by the guild owner!'), console.log(`[Ping:${Math.round(client.ws.ping)}ms]${client.shard ? ` [Shard: #${client.shard.ids}]` : ''} ${cmd.help.name} failed!: Not Guild Owner! `), message.channel.stopTyping(true);
 			}
