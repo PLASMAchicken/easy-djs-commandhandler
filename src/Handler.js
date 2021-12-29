@@ -188,9 +188,13 @@ class CommandHandler {
 	async handleInteraction(client, interaction) {
 		const content = client.prefix + interaction.commandName + ' ' + (interaction.options.getString('input') ? interaction.options.getString('input') : '');
 
+
+		const simulate = await interaction.reply({ content: 'Simulating command:\n' + content, fetchReply: true });
+		console.log(simulate);
+
 		const message = new Message(client, {
 			channel_id: interaction.channelId,
-			id: SnowflakeUtil.generate(),
+			id: simulate.id,
 			guild_id: interaction.guildId,
 			member: interaction.member.toJSON(),
 			author: interaction.user,
@@ -199,7 +203,6 @@ class CommandHandler {
 		console.log(message.content);
 		console.log(message.mentions);
 
-		interaction.reply({ content: 'Simulating command:\n' + content });
 
 		if(message.guild && !message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) return;
 		if (message.system || message.author.bot) return;
