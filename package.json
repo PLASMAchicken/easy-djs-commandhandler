@@ -17,12 +17,12 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-plugin-jsdoc": "^36.0.7"
+    "eslint": "^8.6.0",
+    "eslint-plugin-jsdoc": "^37.0.7"
   },
   "dependencies": {
-    "@discordjs/builders": "^0.5.0",
-    "discord.js": "discordjs/discord.js",
+    "@discordjs/builders": "^0.11.0",
+    "discord.js": "^13",
     "ms": "^2.1.1",
     "setimmediate": "^1.0.5"
   }
